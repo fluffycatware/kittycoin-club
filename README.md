@@ -7,6 +7,8 @@
     <a href="https://solidity.readthedocs.io" target="_blank"><img src="https://img.shields.io/badge/Solidity-%5E0.4.18-blue.svg" alt="Solidity"></a>
 </div>
 
+## About
+
 This repository houses the [kittcoin.club](https://kittycoin.club)'s donation system. It has been built using Ethereum smart contracts.
 
 ## Developing This Contract
