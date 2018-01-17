@@ -1,5 +1,3 @@
-<img src="https://raw.github.com/fluffycatware/kittycoin-club/master/img/project-banner.jpg" data-canonical-src="https://raw.github.com/fluffycatware/kittycoin-club/master/img/project-banner.jpg" align="center"/>
-
 <div align = "center">
     <h1>KittyCoin Club <em>DApp</em></h1>
     <p>Donation site for cats in foster care built on smart contracts.</p>
@@ -72,6 +70,10 @@ To run the dev application use the following
 $ npm install
 $ npm run dev
 ```
+
+## Screenshots
+
+<img src="https://raw.github.com/fluffycatware/kittycoin-club/master/img/project-banner.jpg" data-canonical-src="https://raw.github.com/fluffycatware/kittycoin-club/master/img/project-banner.jpg" align="center"/>
 
 ## Attribution
 
