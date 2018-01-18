@@ -2,7 +2,6 @@
     <h1>KittyCoin Club <em>DApp</em></h1>
     <p>Donation site for cats in foster care built on smart contracts.</p>
     <a href="https://travis-ci.org/fluffycatware/kittycoin-club" target="_blank"><img src="https://travis-ci.org/fluffycatware/kittycoin-club.svg?branch=master" alt="Build Status"></a>
-    <a href="https://codecov.io/gh/fluffycatware/kittycoin-club" target="_blank"><img src="https://codecov.io/gh/fluffycatware/kittycoin-club/branch/master/graph/badge.svg" alt="codecov"></a>
     <a href="https://www.ethereum.org/" target="_blank"><img src="https://img.shields.io/badge/Ethereum-ETH-blue.svg" alt="Ethereum"></a>
     <a href="https://solidity.readthedocs.io" target="_blank"><img src="https://img.shields.io/badge/Solidity-%5E0.4.18-blue.svg" alt="Solidity"></a>
     <a href="https://nodejs.org/" target="_blank"><img src="https://img.shields.io/badge/Node.js-%5E9.2.0-blue.svg" alt="Node.js"></a>
