@@ -12,7 +12,7 @@
 
 ## About
 
-This repository houses the [kittcoin.club](https://kittycoin.club)'s donation system. It has been built using Ethereum smart contracts.
+This repository houses the [kittycoin.club](https://kittycoin.club)'s donation system. It has been built using Ethereum smart contracts.
 
 ## Developing This Contract
 
