@@ -1,11 +1,9 @@
 module.exports = {
-    copyNodeModules: false,
+    norpc: true,
+    testCommand: 'node --max-old-space-size=4096 ../node_modules/.bin/truffle test --network coverage',
+    compileCommand: 'node --max-old-space-size=4096 ../node_modules/.bin/truffle compile --network coverage',
     skipFiles: [
-        'SafeMath.sol',
-        'ERC20.sol',
-        'test/TestToken.sol',
-	    'test/TestPayableEscapable.sol',
-	    'test/TestPayableTokenEscapable.sol',
-	    'helpers/Migrations.sol'
+        'lifecycle/Migrations.sol',
+        'mocks'
     ]
 }

@@ -1,47 +1,55 @@
 {
-    "env": {
-        "browser": true,
-        "es6": true,
-        "node": true,
-        "mocha": true
-    },
-    "extends": "airbnb",
+    "extends" : [
+      "standard",
+      "plugin:promise/recommended"
+    ],
+    "plugins": [
+      "promise"
+    ],
     "parser": "babel-eslint",
+    "env": {
+      "browser" : true,
+      "es6"     : true,
+      "node"    : true,
+      "mocha"   : true,
+      "jest"    : true
+    },
+    "globals" : {
+      "artifacts": false,
+      "contract": false,
+      "assert": false,
+      "web3": false
+    },
     "rules": {
-        // indentation
-        "indent": [ 2, 4 ],
-
-        // spacing
-        "template-curly-spacing": [ 2, "always" ],
-        "array-bracket-spacing": [ 2, "always" ],
-        "object-curly-spacing": [ 2, "always" ],
-        "computed-property-spacing": [ 2, "always" ],
-        "no-multiple-empty-lines": [ 2, { "max": 1, "maxEOF": 0, "maxBOF": 0 } ],
-
-        // strings
-        "quotes": [ 2, "double", "avoid-escape" ],
-
-        // code arrangement matter
-        "no-use-before-define": [ 2, { "functions": false } ],
-
-        // make it meaningful
-        "prefer-const": 1,
-
-        // keep it simple
-        "complexity": [ 1, 5 ],
-
-        // Consisten return
-        "consistent-return": 0,
-
-        "import/no-extraneous-dependencies": ["error", {"devDependencies": ["**/*.test.js", "**/*.spec.js", "**/compile.js", "**/test/*.js"]}],
-
-        // react
-        "react/prefer-es6-class": 0,
-        "react/jsx-filename-extension": 0,
-        "react/jsx-indent": [ 2, 4 ],
-
-        // one var
-        "one-var": 0
-
+  
+      "strict": [2, "global"],
+  
+      "indent": [2, 2],
+      "quotes": [2, "single"],
+      "semi": ["error", "always"],
+      "space-before-function-paren": ["error", "always"],
+      "no-use-before-define": 0,
+      "eqeqeq": [2, "smart"],
+      "dot-notation": [2, {"allowKeywords": true, "allowPattern": ""}],
+      "no-redeclare": [2, {"builtinGlobals": true}],
+      "no-trailing-spaces": [2, { "skipBlankLines": true }],
+      "eol-last": 1,
+      "comma-spacing": [2, {"before": false, "after": true}],
+      "no-mixed-spaces-and-tabs": [2, "smart-tabs"],
+      "comma-dangle": [1, "always-multiline"],
+      "no-dupe-args": 2,
+      "no-dupe-keys": 2,
+      "no-debugger": 0,
+      "no-undef": 2,
+      "object-curly-spacing": [2, "always"],
+      "max-len": [2, 120, 2],
+      "generator-star-spacing": ["error", "before"],
+      "promise/avoid-new": 0,
+      "promise/always-return": 0,
+      "prefer-const": 1,
+      "complexity": [ 1, 5 ],
+      "consistent-return": 0,
+      "import/no-extraneous-dependencies": ["error", {"devDependencies": ["**/*.test.js", "**/*.spec.js", "**/compile.js", "**/test/*.js"]}],
+      "one-var": 0
     }
-}
+  }

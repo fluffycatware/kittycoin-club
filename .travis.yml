@@ -1,7 +1,21 @@
+
 dist: trusty
 sudo: required
+group: beta
 language: node_js
 node_js:
-  - "8"
-script: npm run travis
-    
+  - "9"
+cache:
+  directories:
+    - node_modules
+env:
+  -
+  - SOLIDITY_COVERAGE=true
+matrix:
+  fast_finish: true
+  allow_failures:
+    - env: SOLIDITY_COVERAGE=true
+before_script:
+  - truffle version
+script:
+  - npm run test

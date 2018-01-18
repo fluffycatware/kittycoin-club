@@ -2,8 +2,16 @@
   "name": "kittycoin-club",
   "version": "0.1.0",
   "description": "Donation site for cats in foster care built on smart contracts",
-  "author": "Nathan Glover",
-  "license": "ISC",
+  "author": "Nathan Glover <nathan@glovers.id.au>",
+  "license": "MIT",
+  "keywords": [
+    "solidity",
+    "ethereum",
+    "smart",
+    "contracts",
+    "kittycoin",
+    "donations"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fluffycatware/kittycoin-club.git"
@@ -14,7 +22,16 @@
   "homepage": "https://github.com/fluffycatware/kittycoin-club",
   "devDependencies": {
     "async": "^2.5.0",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-stage-2": "^6.18.0",
+    "babel-preset-stage-3": "^6.17.0",
+    "babel-register": "^6.23.0",
     "bignumber.js": "^4.0.2",
+    "chai": "^4.0.2",
+    "chai-as-promised": "^7.0.0",
+    "chai-bignumber": "^2.0.0",
+    "coveralls": "^2.13.1",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^14.1.0",
     "eslint-config-standard": "^10.2.1",
@@ -25,30 +42,32 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-react": "^6.10.3",
     "eslint-plugin-standard": "^3.0.1",
+    "eslint-traverser": "^1.5.2",
+    "ethereumjs-testrpc": "^6.0.1",
+    "ethereumjs-util": "^5.1.2",
     "lite-server": "^2.3.0",
+    "mocha-lcov-reporter": "^1.3.0",
     "random-bytes": "^1.0.0",
     "solc": "^0.4.15",
     "solidity-parser": "^0.4.0",
     "web3": "^0.19.1"
   },
   "dependencies": {
-    "babel-eslint": "^8.0.1",
-    "codecov": "^2.3.0",
+    "dotenv": "^4.0.0",
+    "ethjs-abi": "^0.2.1",
     "jsonfile": "^3.0.1",
     "solidity-coverage": "^0.4.7",
-    "solium": "^0.5.5",
-    "truffle": "^4.0.4"
+    "solium": "^1.1.2",
+    "truffle": "^4.0.5",
+    "truffle-hdwallet-provider": "0.0.3"
   },
-  "main": "truffle.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
     "dev": "lite-server",
-    "test": "truffle test",
-    "lint": "solium --dir contracts && eslint test",
-    "coverage": "./node_modules/.bin/solidity-coverage",
-    "qa": "npm run lint && npm run coverage",
-    "travis": "npm run qa && ./node_modules/.bin/codecov"
+    "test": "scripts/test.sh",
+    "console": "truffle console",
+    "coverage": "scripts/coverage.sh"
   }
 }

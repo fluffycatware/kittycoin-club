@@ -5,6 +5,7 @@
     <a href="https://codecov.io/gh/fluffycatware/kittycoin-club" target="_blank"><img src="https://codecov.io/gh/fluffycatware/kittycoin-club/branch/master/graph/badge.svg" alt="codecov"></a>
     <a href="https://www.ethereum.org/" target="_blank"><img src="https://img.shields.io/badge/Ethereum-ETH-blue.svg" alt="Ethereum"></a>
     <a href="https://solidity.readthedocs.io" target="_blank"><img src="https://img.shields.io/badge/Solidity-%5E0.4.18-blue.svg" alt="Solidity"></a>
+    <a href="https://nodejs.org/" target="_blank"><img src="https://img.shields.io/badge/Node.js-%5E9.2.0-blue.svg" alt="Node.js"></a>
 </div>
 
 ## About
@@ -52,7 +53,7 @@ eth_sendTransaction
   Block Time: Wed Jan 17 2018 22:42:34 GMT+0800 (AWST)
 ```
 
-When `truffle test` is executed it uses the `test` config within the `truffle.js` file
+When `npm test` is executed it uses the `test` config within the `truffle-config.js` file
 
 ```javascript
     test: {
@@ -80,3 +81,5 @@ $ npm run dev
 ## Attribution
 
 This smart contract used [Giveth's Base layer](https://github.com/Giveth/common-contract-deps) contract structure. Check out the amazing work they are doing at [Giveth's website](https://github.com/Giveth/website).
+
+`Ownable.sol` contract is provided by the [zeppelin-solidity](https://github.com/OpenZeppelin/zeppelin-solidity) repo.
