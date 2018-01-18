@@ -2,6 +2,7 @@ pragma solidity ^0.4.18;
 
 import "./KittyCoinFactory.sol";
 
+
 contract KittyCoinHandler is KittyCoinFactory {
 
     // Retrieves an array containing all KittyCoin's owned

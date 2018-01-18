@@ -37,3 +37,4 @@ build/
 
 # lol macs
 .DS_Store/
+*.psd

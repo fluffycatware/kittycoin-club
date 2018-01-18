@@ -2,6 +2,7 @@ pragma solidity ^0.4.18;
 
 import "./ownership/Ownable.sol";
 
+
 contract KittyCoinFactory is Ownable {
 
     // Event fires when a new kitty coin is generated. It can be

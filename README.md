@@ -1,3 +1,5 @@
+<img src="https://raw.github.com/fluffycatware/kittycoin-club/master/img/project-banner.png" data-canonical-src="https://raw.github.com/fluffycatware/kittycoin-club/master/img/project-banner.png" align="center"/>
+
 <div align = "center">
     <h1>KittyCoin Club <em>DApp</em></h1>
     <p>Donation site for cats in foster care built on smart contracts.</p>
@@ -75,7 +77,7 @@ $ npm run dev
 
 ## Screenshots
 
-<img src="https://raw.github.com/fluffycatware/kittycoin-club/master/img/project-banner.jpg" data-canonical-src="https://raw.github.com/fluffycatware/kittycoin-club/master/img/project-banner.jpg" align="center"/>
+<img src="https://raw.github.com/fluffycatware/kittycoin-club/master/img/project-dashboard.jpg" data-canonical-src="https://raw.github.com/fluffycatware/kittycoin-club/master/img/project-dashboard.jpg" align="center"/>
 
 ## Attribution
 

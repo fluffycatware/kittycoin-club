@@ -1,0 +1,20 @@
+/build/**
+/coverage/**
+/docs/**
+/jsdoc/**
+/templates/**
+/tests/bench/**
+/tests/fixtures/**
+/tests/performance/**
+/tmp/**
+test.js
+!.eslintrc.js
+
+## Truffle
+truffle-config.js
+
+## Web Frontend
+/src/js/app.js
+/src/js/bootstrap.min.js
+/src/js/truffle-contract.js
+/src/js/web3.min.js
