@@ -31,7 +31,7 @@ Navigate into the root of this project and install truffle (if you haven't alrea
 
 ```
 $ npm install -g truffle
-$ truffle test
+$ npm run test
 ```
 
 If you watch the `ganache-cli` output you'll see various transactions taking place while your the contracts unit tests are executed.
@@ -55,7 +55,7 @@ eth_sendTransaction
   Block Time: Wed Jan 17 2018 22:42:34 GMT+0800 (AWST)
 ```
 
-When `npm test` is executed it uses the `test` config within the `truffle-config.js` file
+When `npm run test` is executed it uses the config within the `truffle-config.js` file
 
 ```javascript
     test: {
