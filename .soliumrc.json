@@ -12,7 +12,6 @@
     "no-empty-blocks": true,
     "no-unused-vars": true,
     "quotes": true,
-    "blank-lines": true,
     "indentation": false,
     "whitespace": true,
     "deprecated-suicide": true,
