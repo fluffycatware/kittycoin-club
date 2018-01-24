@@ -50,4 +50,8 @@ contract KittyCoinClub is KittyCoinFactory {
         }
         return result;
     }
+
+    function donateTo(uint _kittyId, uint _donationAmount) external {
+
+    }
 }

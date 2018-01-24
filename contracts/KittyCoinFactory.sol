@@ -5,12 +5,7 @@ import "./ownership/Ownable.sol";
 
 contract KittyCoinFactory is Ownable {
 
-    /***********
-        Events
-    ************/
-    // Event fires when a new kitty coin is generated. It can be
-    // Received using web3 code like the following:
-    // var event = KittyCoinFactory.NewKittyCoin(function(error, result)
+    /* Events */
     event NewKittyCoin(uint kittyCoinId, string name, uint coinSeed);
 
     // Used to generate the different types of KittyCoin. 

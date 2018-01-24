@@ -2,11 +2,11 @@ pragma solidity ^0.4.18;
 
 import "truffle/Assert.sol";
 import "truffle/DeployedAddresses.sol";
-import "../contracts/Donation.sol";
+import "../contracts/DonationFactory.sol";
 
 
 contract TestDonation {
-    Donation donation = Donation(DeployedAddresses.Donation());
+    DonationFactory donation = DonationFactory(DeployedAddresses.DonationFactory());
 
     // Testing the donate() function
     function testUserCanDonateToKitty() public {
