@@ -1,14 +1,16 @@
 pragma solidity ^0.4.18;
 
-contract KittyFactory {
+import "./ownership/Ownable.sol";
 
-    /***********
-        Events
-    ************/
-    // Event fires when a new kitty goes up for donation.
-    // It can be receieved using web3 code like the following:
-    // var event = KittyFactory.NewKitty(function(error, result)
-    event NewKittyAdded(bytes5 kittyId, string name, uint traitsId);
+/**
+ * @title KittyFactory 
+ * @author Nathan Glover
+ * @notice manages the creation and modification of kittys that are up for donation
+ */
+contract KittyFactory is Ownable {
+
+    /* Events */
+    event NewKitty(uint kittyId, uint traitsId);
 
     // Used to generate and store the different traits
     // for the kitties uploaded. This allows us to encode details
@@ -20,7 +22,6 @@ contract KittyFactory {
     uint seedModulus = 10 ** traitDigits;
 
     //TODO decide if having the string name is too expensive
-    // Kitty donation offer
     struct Kitty {
         // Allows the toggling on and off of donations
         bool donationsEnabled;
@@ -43,23 +44,39 @@ contract KittyFactory {
         uint donationCap;
     }
 
-    // Public array of all KittyCoins
+    // Public array of all Kitties
     Kitty[] public kitties;
 
-    // Creates a kitty and returns is index in the kitties array
+    /* Mappings */
+    mapping (uint => address) public kittyToTrust;
+    mapping (address => uint) trustKittyCount;
+
+    //TODO Confirm that this is called by a trust
+    /**
+    * @notice Creates a new kitty which goes up for donation
+    * @param _enabled Toggles the donation status on this kitty
+    * @param _trustAddr The wallet address of the trust
+    * @param _fosterAddr The wallet address of the foster carer
+    * @param _traitSeed Unique traits for this kitty
+    * @param _donationCap The maximum amount that the carer can receive
+    */
     function _createKitty(
         bool _enabled, 
         address _trustAddr, 
         address _fosterAddr, 
         uint _traitSeed, 
         uint _donationCap
-        ) internal returns (uint) 
+        ) internal
         {   
             // 'id' is the index of the kitty in the array of kitties
             uint id = kitties.push(
                 Kitty(_enabled, _trustAddr, _fosterAddr, _traitSeed, _donationCap)
                 ) - 1;
-            // Return the index of the newly created kitty
-            return id;
+            // Reference the donation to the sender
+            kittyToTrust[id] = msg.sender;
+            // increment the total number of kittcoins owned for the sender
+            trustKittyCount[msg.sender]++;
+            // Return an event for the newly created kitty
+            NewKitty(id, _traitSeed);
     }
 }

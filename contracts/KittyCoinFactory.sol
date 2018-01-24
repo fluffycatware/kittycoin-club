@@ -2,7 +2,12 @@ pragma solidity ^0.4.18;
 
 import "./ownership/Ownable.sol";
 
-
+/**
+ * @title KittyCoinFactory
+ * @author Nathan Glover
+ * @notice KittyCoinClub contract is the main input to the this DApp, it controls the 
+ * supply of KittyCoins in circulation and other utilities perdinant to the contract a a whole
+ */
 contract KittyCoinFactory is Ownable {
 
     /* Events */
@@ -23,10 +28,15 @@ contract KittyCoinFactory is Ownable {
     // Public array of all KittyCoins
     KittyCoin[] public kittyCoins;
 
+    /* Mappings */
     mapping (uint => address) public kittyCoinToOwner;
     mapping (address => uint) ownerKittyCoinCount;
 
-    // Internally managed function to generate the KittyCoins safely
+    /**
+    * @notice generate the KittyCoin's safely
+    * @param _name kitty name or identifier
+    * @param _seed the generated seed
+    */
     function _createKittyCoin(string _name, uint _seed) internal {
         // 'id' is the index of the kittycoin in the array of kittycoins
         uint id = kittyCoins.push(KittyCoin(_name, _seed)) - 1;
@@ -39,9 +49,11 @@ contract KittyCoinFactory is Ownable {
     }
 
     //TODO decide if I want to allow an inital purchase of not
-    // Generates the random seed based on an input string
-    // This input string will be unique to the kitty coin
-    // to give the a different visual output
+    /**
+    * @notice Generates the random seed based on an input string
+    * @param _str input seed for the randomly generated coin
+    * @return a random seed
+    */
     function _generateRandomSeed(string _str) private view returns (uint) {
         // First gets the Keccak hash of our input string.
         // for example: Gracie
@@ -53,8 +65,10 @@ contract KittyCoinFactory is Ownable {
         return rand * seedModulus;
     }
     
-    // Public function that allows new-commers to generate their first
-    // KittyCoin for free.
+    /**
+    * @notice Allows new-commers to generate their first
+    * @param _name input seed for the randomly generated coin
+    */
     function createRandomKittyCoin(string _name) public {
         // Confirm that the owner doesn't have any kittycoins
         require(ownerKittyCoinCount[msg.sender] == 0);

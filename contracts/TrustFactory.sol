@@ -3,21 +3,18 @@ pragma solidity ^0.4.18;
 import "./ownership/Ownable.sol";
 
 /**
- * @title TrustFactory
- * @dev The TrustFactory manages anything to do with the creation,
- * deletion and modificaiton of charitable trusts
+ * @title TrustFactory 
+ * @author Nathan Glover
+ * @notice manages anything to do with the creation, deletion and modificaiton of charitable trusts.
  */
 contract TrustFactory is Ownable {
 
     /* Events */
     event NewTrust(uint trustId);
     event ChangedTrustAddress(uint trustId, address trustAddr);
-
-    /* Mappings */
-    mapping (uint => address) addressLookup;
     
     /**
-    * @dev Throws if called by any account other then the owner
+    * @notice Throws if called by any account other then the owner
     * of the trust being modified
     */
     modifier onlyTrustOwner(uint _trustId) {
@@ -32,10 +29,14 @@ contract TrustFactory is Ownable {
         address trustAddress;
     }
 
+    // Public array of all Trusts
     Trust[] public trusts;
 
+    /* Mappings */
+    mapping (uint => address) addressLookup;
+
     /**
-    * @dev Private trust creation that is handled internally
+    * @notice Private trust creation that is handled internally
     * @param _enabled Is the trust enabled
     * @param _trustAddr The address to link this trust to
     */
@@ -50,7 +51,7 @@ contract TrustFactory is Ownable {
     }
 
     /**
-    * @dev Allows the contract owner to add a new trust
+    * @notice Allows the contract owner to add a new trust
     * @param _trustAddr The address to link this trust to
     */
     function createTrust(address _trustAddr) onlyOwner public {
@@ -58,7 +59,7 @@ contract TrustFactory is Ownable {
     }
 
     /**
-    * @dev Allows the contract owner to enable and disable trusts
+    * @notice Allows the contract owner to enable and disable trusts
     * @param _id The id of the trust that should be toggled
     * @param _enabled A boolean true or false, where true is to enable
     * and false is to disable the trust
