@@ -65,7 +65,6 @@
     "test": "test"
   },
   "scripts": {
-    "compile": "truffle compile",
     "dev": "lite-server",
     "test": "scripts/test.sh",
     "lint": "eslint .",
@@ -74,7 +73,9 @@
     "lint:sol:fix": "solium -d . --fix",
     "lint:all": "npm run lint && npm run lint:sol",
     "lint:all:fix": "npm run lint:fix && npm run lint:sol:fix",
+    "compile": "truffle compile",
     "console": "truffle console",
+    "migrate": "truffle migrate",
     "coverage": "scripts/coverage.sh"
   }
 }

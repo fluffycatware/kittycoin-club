@@ -29,7 +29,7 @@ When you run Ganache you'll be presented with 10 accounts with private keys. The
 
 Navigate into the root of this project and install truffle (if you haven't already got it). Run the truffle test command to compile and test the contracts.
 
-```
+```bash
 $ npm install -g truffle
 $ npm run test
 ```
@@ -55,7 +55,9 @@ eth_sendTransaction
   Block Time: Wed Jan 17 2018 22:42:34 GMT+0800 (AWST)
 ```
 
-When `npm run test` is executed it uses the config within the `truffle-config.js` file
+When `npm run test` is executed it uses the config within the `truffle-config.js` file. This runs the test against a network run with `lite-server` and `testrpc` (this method is not longer the defacto way of working, however its easier for us to deploy and use with travis.ci).
+
+The configuration for running the network locally using truffle is in the `truffle.js` file with the configuration below.
 
 ```javascript
     test: {
@@ -69,9 +71,16 @@ When `npm run test` is executed it uses the config within the `truffle-config.js
 
 *Note: I have 7545 in this file as I've been using the GUI version of Ganache which defaults to this port.*
 
-To run the dev application use the following
+When you are ready to test, run the `ganache-cli` or `ganache gui` client and then execute the following to compile and deploy the contracts to the blockchain
 
+```bash
+$ truffle compile
+$ truffle migrate
 ```
+
+then to run the dev application use the following
+
+```bash
 $ npm install
 $ npm run dev
 ```

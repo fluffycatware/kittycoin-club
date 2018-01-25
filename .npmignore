@@ -1,0 +1,10 @@
+.travis.yml
+
+# Coverage stuff #
+##################
+
+allFiredEvents
+coverage.json
+coverage/
+coverageEnv/
+scTopics

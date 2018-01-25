@@ -13,15 +13,14 @@ contract KittyCoinClub is KittyCoinFactory {
     /* Contract owner */
     address owner;
 
-    string public name = "KittyCoinClub";
-    string public symbol = "🐱"; // unicode cat symbol
-    uint8 public decimals = 0;
+    string public name = "KittyCoinClub"; // Name for display purposes
+    string public symbol = "🐱"; // unicode cat symbol for display purposes
+    uint8 public decimals = 0; // Amount of decimals for display purposes
     
     /* Coin supply details */
     uint256 public totalSupply = 25600;
     uint16 public remainingKittyCoins = 25600 - 256; // there will only ever be 25,000 cats
     uint16 public remainingFounderCoins = 256; // there can only be a maximum of 256 founder coins
-    uint16 public donationIndex = 0;
 
     // gets set with the immediately preceding blockhash when 
     // the contract is activated to prevent "premining"
@@ -32,6 +31,7 @@ contract KittyCoinClub is KittyCoinFactory {
     */
     function KittyCoinClub() payable public {
         owner = msg.sender;
+        assert((remainingKittyCoins + remainingFounderCoins) == totalSupply);
     }
 
     /**
