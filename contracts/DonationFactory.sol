@@ -42,20 +42,19 @@ contract DonationFactory is KittyFactory {
         address _trustAddress, 
         address _fosterAddress) internal
         {
-            //TODO Execute the transaction
-            
-            // 'id' is the index of the donation in the array of donations
-            uint id = donations.push(
-                Donation(_kittyId, _trustAmount, _fosterAmount, _trustAddress, _fosterAddress)
-                ) - 1;
-            // Reference the donation to the sender
-            donationToDonator[id] = msg.sender;
-            // increment the total number of kittcoins owned for the sender
-            donatorDonationCount[msg.sender]++;
-            //TODO Implement SafeMaths
-            uint totalAmount = _trustAmount + _fosterAmount;
-            // Return an event for the newly created donation
-            NewDonation(id, _kittyId, totalAmount);
+        //TODO Execute the transaction
+        // 'id' is the index of the donation in the array of donations
+        uint id = donations.push(
+            Donation(_kittyId, _trustAmount, _fosterAmount, _trustAddress, _fosterAddress)
+            ) - 1;
+        // Reference the donation to the sender
+        donationToDonator[id] = msg.sender;
+        // increment the total number of kittcoins owned for the sender
+        donatorDonationCount[msg.sender]++;
+        //TODO Implement SafeMaths
+        uint totalAmount = _trustAmount + _fosterAmount;
+        // Return an event for the newly created donation
+        NewDonation(id, _kittyId, totalAmount);
     }
 
     /**

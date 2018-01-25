@@ -35,8 +35,8 @@ contract('KittyCoinClub', function (accounts) {
 
   it('should allow a random kittycoin with name `Gracie`', async function () {
     await kittycoinclub.createRandomKittyCoin('Gracie')
-    .then(function (result) {
-      assert.include(result.logs[0].event, 'NewKittyCoin', 'NewKittyCoin event was not triggered');
-    });
+      .then(function (result) {
+        assert.include(result.logs[0].event, 'NewKittyCoin', 'NewKittyCoin event was not triggered');
+      });
   });
 });

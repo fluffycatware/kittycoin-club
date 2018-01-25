@@ -68,15 +68,15 @@ contract KittyFactory is Ownable {
         uint _donationCap
         ) internal
         {   
-            // 'id' is the index of the kitty in the array of kitties
-            uint id = kitties.push(
-                Kitty(_enabled, _trustAddr, _fosterAddr, _traitSeed, _donationCap)
-                ) - 1;
-            // Reference the donation to the sender
-            kittyToTrust[id] = msg.sender;
-            // increment the total number of kittcoins owned for the sender
-            trustKittyCount[msg.sender]++;
-            // Return an event for the newly created kitty
-            NewKitty(id, _traitSeed);
+        // 'id' is the index of the kitty in the array of kitties
+        uint id = kitties.push(
+            Kitty(_enabled, _trustAddr, _fosterAddr, _traitSeed, _donationCap)
+            ) - 1;
+        // Reference the donation to the sender
+        kittyToTrust[id] = msg.sender;
+        // increment the total number of kittcoins owned for the sender
+        trustKittyCount[msg.sender]++;
+        // Return an event for the newly created kitty
+        NewKitty(id, _traitSeed);
     }
 }

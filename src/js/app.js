@@ -4,7 +4,7 @@ App = {
   contracts: {},
 
   init () {
-        // Load kitties.
+    // Load kitties.
     $.getJSON('../kitties.json', (data) => {
       const kittyRow = $('#kittyRow');
       const kittyTemplate = $('#kittyTemplate');
@@ -24,11 +24,11 @@ App = {
   },
 
   initWeb3 () {
-        // Is there an injected web3 instance?
+    // Is there an injected web3 instance?
     if (typeof web3 !== 'undefined') {
       App.web3Provider = web3.currentProvider;
     } else {
-            // If no injected web3 instance is detected, fall back to Ganache
+      // If no injected web3 instance is detected, fall back to Ganache
       App.web3Provider = new Web3.providers.HttpProvider('http://localhost:7545');
     }
     web3 = new Web3(App.web3Provider);
@@ -37,15 +37,15 @@ App = {
   },
 
   initContract () {
-    $.getJSON('Donation.json', (data) => {
-            // Get the necessary contract artifact file and instantiate it with truffle-contract
-      const DonationArtifact = data;
-      App.contracts.Donation = TruffleContract(DonationArtifact);
+    $.getJSON('DonationFactory.json', (data) => {
+      // Get the necessary contract artifact file and instantiate it with truffle-contract
+      const DonationFactoryArtifact = data;
+      App.contracts.DonationFactory = TruffleContract(DonationFactoryArtifact);
 
-            // Set the provider for our contract
-      App.contracts.Donation.setProvider(App.web3Provider);
+      // Set the provider for our contract
+      App.contracts.DonationFactory.setProvider(App.web3Provider);
 
-            // User our contract to retrieve the kitties with donations
+      // User our contract to retrieve the kitties with donations
       return App.markDonatedTo();
     });
 
@@ -59,7 +59,7 @@ App = {
   markDonatedTo (donators, account) {
     let donationInstance;
 
-    App.contracts.Donation.deployed().then((instance) => {
+    App.contracts.DonationFactory.deployed().then((instance) => {
       donationInstance = instance;
 
       return donationInstance.getDonators.call();
@@ -88,7 +88,7 @@ App = {
 
       const account = accounts[ 0 ];
 
-      App.contracts.Donation.deployed().then((instance) => {
+      App.contracts.DonationFactory.deployed().then((instance) => {
         donationInstance = instance;
 
         // Execute donate as a transaction by sending account
