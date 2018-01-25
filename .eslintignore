@@ -12,6 +12,7 @@ test.js
 
 ## Truffle
 truffle-config.js
+truffle.js
 
 ## Web Frontend
 /src/js/app.js
