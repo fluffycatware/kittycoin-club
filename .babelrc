@@ -1,4 +1,10 @@
 {
-  "ignore": ["*.min.js"],
-  "presets": ["es2015", "stage-2", "stage-3"]
+  "ignore": [
+    "*.min.js"
+  ],
+  "presets": [
+    "es2015",
+    "stage-2", 
+    "stage-3"
+  ]
 }

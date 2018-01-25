@@ -71,7 +71,7 @@ The configuration for running the network locally using truffle is in the `truff
 
 *Note: I have 7545 in this file as I've been using the GUI version of Ganache which defaults to this port.*
 
-When you are ready to test, run the `ganache-cli` or `ganache gui` client and then execute the following to compile and deploy the contracts to the blockchain
+When you are ready to test, run the `ganache-cli` or `ganache gui` client and then execute the following to compile and deploy the contracts to the network
 
 ```bash
 $ truffle compile
