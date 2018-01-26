@@ -70,41 +70,46 @@
         </div>
         <!-- /row -->
 
-        <div id="kittyRow" class="row card-columns">
+        <div id="kitty-row" class="row card-columns">
             <!-- Kitten Load Here -->
         </div>
     </div>
 
-    <div id="kittyTemplate" style="display: none;">
+    <div id="kitty-template" style="display: none;">
         <div class="col-lg-4 col-md-6 col-sm-12">
-            <div class="ribbon">
+            <div class="ribbon card-kitty">
                 <div class="card shadow-1">
 
                     <!-- Kitty Name -->
                     <h4 class="card-title">Name</h4>
-    
+                    
                     <!-- Kitty Image -->
                     <img class="card-img-top" src="assets/img/kitties/1.jpg" style="width:100%">
                     
                     <div class="card-block">
+
                         <!-- Kitty Description -->
                         <p class="card-text">Description</p>
-    
+
                         <!-- Kitty Donation Form -->
                         <div class="row">
                             <div class="input-group p-1">
-                                <input class="form-control" type="number" value="0.001" id="donation-amount" aria-label="Amount (ETH)">
+                                <!-- Kitty Donation Amount -->
+                                <input class="form-control" type="number" value="0.001" id="kitty-donation" aria-label="Amount (ETH)">
                                 <span class="input-group-addon">ETH</span>
                             </div>
                             <div class="input-group p-1">
+                                <!-- Kitty Donation Button -->
                                 <button class="btn btn-primary btn-donate" type="button" kitty-id="0">Donate</button>
-                                <input class="form-control" type="number" value="0" id="donation-percent" aria-label="Trust (%)">
+                                <!-- Kitty Donation Percent -->
+                                <input class="form-control" type="number" value="0" id="kitty-percent" aria-label="Trust (%)">
                                 <span class="input-group-addon">%</span>
                             </div>
                         </div>
                     </div>
+                    <!-- /card-block -->
+
                     <div class="card-footer">
-                        
                         <!-- Kitty Donation Bar -->
                         <div class="progress">
                             <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 20%" aria-valuenow="20%"
@@ -112,9 +117,14 @@
                         </div>
                         <small class="text-muted">0.0005 / 0.002 ETH</small>
                     </div>
+                    <!-- /card-footer -->
+
                 </div>
+                <!-- /card -->
             </div>
+            <!-- /ribbon -->
         </div>
+        <!-- /col-lg-4 /col-md-6 /col-sm-12 -->
     </div>
 
     </div>

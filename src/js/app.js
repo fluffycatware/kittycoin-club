@@ -5,14 +5,13 @@ var App = {
   init () {
     // Load kitties.
     $.getJSON('../kitties.json', (data) => {
-      const kittyRow = $('#kittyRow');
-      const kittyTemplate = $('#kittyTemplate');
+      const kittyRow = $('#kitty-row');
+      const kittyTemplate = $('#kitty-template');
 
       for (var i = 0; i < data.length; i++) {
         kittyTemplate.find('.card-title').text(data[i].name);
-        kittyTemplate.find('img').attr('src', data[i].picture);
+        kittyTemplate.find('.card-img-top').attr('src', data[i].picture);
         kittyTemplate.find('.card-text').text(data[i].description);
-        kittyTemplate.find('.kitty-location').text(data[i].location);
         kittyTemplate.find('.btn-donate').attr('kitty-id', data[i].id);
 
         kittyRow.append(kittyTemplate.html());
@@ -65,7 +64,7 @@ var App = {
     }).then((donators) => {
       for (var i = 0; i < donators.length; i++) {
         if (donators[i] !== '0x0000000000000000000000000000000000000000') {
-          $('.panel-kitty').eq(i).find('button').text('Success').attr('disabled', true);
+          $('.card-kitty').eq(i).find('button').text('Success').attr('disabled', true);
         }
       }
     }).catch((err) => {

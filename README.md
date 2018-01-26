@@ -85,6 +85,16 @@ $ npm install
 $ npm run dev
 ```
 
+### Send yourself some ETH
+
+You can use the `truffle console` to send yourself some ETH to use. Replace your address with the one in the `to:` field
+
+```bash
+$ truffle console
+
+truffle(development)> web3.eth.sendTransaction({from:web3.eth.accounts[0], to:'0xb39274C9887d314Ba65dA9929f3d0E94893570A7', value: web3.toWei(20, "ether")})
+```
+
 ## Screenshots
 
 <img src="https://raw.github.com/fluffycatware/kittycoin-club/master/img/project-dashboard.png" data-canonical-src="https://raw.github.com/fluffycatware/kittycoin-club/master/img/project-dashboard.png" align="center"/>
