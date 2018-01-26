@@ -11,7 +11,7 @@
     "name": "Felix",
     "picture": "assets/img/kitties/1.jpg",
     "location": "Perth, Western Australia",
-    "description": "Play Hard, Nap Hard is my motto. I get along better with my human playmates then my kitten ones."
+    "description": "Play Hard, Nap Hard is my motto. I get along better with my human playmates!."
   },
   {
     "id": 2,
@@ -25,6 +25,6 @@
     "name": "Calipso",
     "picture": "assets/img/kitties/3.jpg",
     "location": "Perth, Western Australia",
-    "description": "When I arrived all I wanted to do was snuggle up to my human. Maybe you can be my new human?"
+    "description": "All I want to do was snuggle up to my human. Maybe you can be my new human?"
   }
 ]

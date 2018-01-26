@@ -87,7 +87,7 @@ $ npm run dev
 
 ## Screenshots
 
-<img src="https://raw.github.com/fluffycatware/kittycoin-club/master/img/project-dashboard.jpg" data-canonical-src="https://raw.github.com/fluffycatware/kittycoin-club/master/img/project-dashboard.jpg" align="center"/>
+<img src="https://raw.github.com/fluffycatware/kittycoin-club/master/img/project-dashboard.png" data-canonical-src="https://raw.github.com/fluffycatware/kittycoin-club/master/img/project-dashboard.png" align="center"/>
 
 ## Attribution
 
