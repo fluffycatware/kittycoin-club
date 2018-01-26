@@ -196,7 +196,7 @@ i {
 .ribbon {
     width: 100%;
     margin: 10px auto;
-    padding: 0 10px 0;
+    padding: 10px 10px 0;
     position: relative;
     color: #0674bb;
     background: #fff;
@@ -214,7 +214,7 @@ i {
     padding: 5px 10px;
     position: relative;
     left: -16px;
-    top: 8px;
+    top: 5px;
     color: white;
     text-shadow: 0 1px 1px #111111;
     border-top: 1px solid #3498db;

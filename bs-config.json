@@ -1,5 +1,5 @@
 {
-  "open": false,
+  "open": true,
   "server": {
     "baseDir": ["./src", "./build/contracts"]
   }
