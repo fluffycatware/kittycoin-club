@@ -4,13 +4,18 @@ body {
     font-weight: 300;
     font-size: 16px;
     color: #555;
-
     -webkit-font-smoothing: antialiased;
     -webkit-overflow-scrolling: touch;
 }
 
 /* Titles */
-h1, h2, h3, h4, h5, h6 {
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-family: 'Lato', sans-serif;
     font-weight: 300;
     color: #333;
@@ -32,6 +37,7 @@ h4 {
 }
 
 /* Paragraph & Typographic */
+
 p {
     line-height: 28px;
     margin-bottom: 25px;
@@ -43,10 +49,10 @@ p {
 }
 
 /* Links */
+
 a {
     color: #3498db;
     word-wrap: break-word;
-
     -webkit-transition: color 0.1s ease-in, background 0.1s ease-in;
     -moz-transition: color 0.1s ease-in, background 0.1s ease-in;
     -ms-transition: color 0.1s ease-in, background 0.1s ease-in;
@@ -88,7 +94,7 @@ hr {
     color: white;
 }
 
-.navbar-default .navbar-nav > li > a {
+.navbar-default .navbar-nav>li>a {
     color: white;
 }
 
@@ -114,7 +120,7 @@ hr {
 
 .responsive-image {
     max-width: 100%;
-    display:block;
+    display: block;
     height: auto;
 }
 
@@ -126,9 +132,11 @@ hr {
 }
 
 .form-control {
-    height: 42px;
-    font-size: 18px;
-    width: 280px;
+    color: #636c72;
+}
+
+.input-group-addon {
+    color: #636c72;
 }
 
 i {
@@ -137,6 +145,7 @@ i {
 }
 
 /* HeaderWrap */
+
 #headerwrap {
     /* background: url(../img/bg01.jpg) no-repeat center top; */
     background-color: #3498db;
@@ -146,12 +155,10 @@ i {
     background-position: center center;
     min-height: 450px;
     width: 100%;
-
     -webkit-background-size: 100%;
     -moz-background-size: 100%;
     -o-background-size: 100%;
     background-size: 100%;
-
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -168,9 +175,97 @@ i {
 }
 
 /* Card configuration */
+
 .card-title {
-    font-size: 30px;
+    font-size: 2.0rem;
     color: white;
     font-weight: 1000;
-    text-shadow: -1.5px 0 black, 0 1.5px black, 1.5px 0 black, 0 -1.5px black;
+}
+
+.card-img-top {
+    width: 100%;
+}
+
+.card-text {
+    color: #636c72;
+    font-weight: 400;
+}
+
+/* Ribbon Round */
+
+.ribbon {
+    width: 100%;
+    margin: 10px auto;
+    padding: 0 10px 0;
+    position: relative;
+    color: #0674bb;
+    background: #fff;
+    border: 1px solid #d2d2d2;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.ribbon h4 {
+    display: block;
+    height: 50px;
+    line-height: 1.2;
+    width: 110%;
+    margin: 0;
+    padding: 5px 10px;
+    position: relative;
+    left: -16px;
+    top: 8px;
+    color: white;
+    text-shadow: 0 1px 1px #111111;
+    border-top: 1px solid #3498db;
+    border-bottom: 1px solid #33aaf8;
+    background: #33aaf8;
+    background: linear-gradient(top, #33aaf8 0%, #3498db 100%);
+    border-radius: 2px 2px 0 0;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.ribbon h4::before,
+.ribbon h4::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 0;
+    position: absolute;
+    bottom: -11px;
+    z-index: -10;
+    border: 5px solid;
+    border-color: #33aaf8 transparent transparent transparent;
+}
+
+.ribbon h4::before {
+    left: 0;
+}
+
+.ribbon h4::after {
+    right: 0;
+}
+
+/* Round */
+.ribbon.round h4 {
+    border-radius: 4px;
+}
+
+.ribbon.round h4::before,
+.ribbon.round h4::after {
+    width: 10px;
+    height: 10px;
+    bottom: -4px;
+    border: none;
+    border-radius: 10px;
+}
+
+.ribbon.round h4::before {
+    background: #33aaf8;
+    background: linear-gradient(left, #33aaf8 0%, #3498db 100%);
+}
+
+.ribbon.round h4::after {
+    background: #33aaf8;
+    background: linear-gradient(right, #33aaf8 0%, #3498db 100%);
 }
