@@ -9,11 +9,11 @@ var App = {
       const kittyTemplate = $('#kittyTemplate');
 
       for (var i = 0; i < data.length; i++) {
-        kittyTemplate.find('.panel-title').text(data[i].name);
+        kittyTemplate.find('.card-title').text(data[i].name);
         kittyTemplate.find('img').attr('src', data[i].picture);
-        kittyTemplate.find('.kitty-description').text(data[i].description);
+        kittyTemplate.find('.card-text').text(data[i].description);
         kittyTemplate.find('.kitty-location').text(data[i].location);
-        kittyTemplate.find('.btn-donate').attr('data-id', data[i].id);
+        kittyTemplate.find('.btn-donate').attr('kitty-id', data[i].id);
 
         kittyRow.append(kittyTemplate.html());
       }
@@ -102,8 +102,8 @@ var App = {
 
 };
 
-$(() => {
-  $(window).load(() => {
+jQuery(document).ready(
+  function ($) {
     App.init();
-  });
-});
+  }
+);

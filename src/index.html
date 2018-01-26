@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Smart Contract system for animal rescue donations">
     <meta name="author" content="Nathan Glover">
     <link rel="shortcut icon" href="assets/img/favicon.ico">
@@ -12,7 +12,7 @@
     <title>KittyCoin Club</title>
 
     <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
         crossorigin="anonymous">
 
     <!-- Custom styles for this template -->
@@ -71,19 +71,32 @@
         </div>
         <!-- /row -->
 
-        <div id="kittyRow" class="row">
-            <!-- KITTENS LOAD HERE -->
+        <div id="kittyRow" class="row card-columns">
+            <!-- Kitten Load Here -->
         </div>
     </div>
 
     <div id="kittyTemplate" style="display: none;">
         <div class="col-sm-6 col-md-4 col-lg-3">
-            <div class="panel panel-default panel-kitty card shadow-1">
-                <img class="card-img-top" src="assets/img/kitties/1.jpg" alt="Card image">
-                <div class="card-body">
-                    <h4 class="panel-title">Tortalina</h4>
-                    <p class="kitty-description">I just had a litter of kittens and am super confused about why that happened!</p>
-                    <button class="btn btn-primary btn-donate shadow-2" type="button" data-id="0">Donate</button>
+            <div class="card shadow-1">
+                <img class="card-img-top img-fluid" src="assets/img/kitties/1.jpg">
+                <div class="card-block">
+                    <h4 class="card-title">Name</h4>
+                    <p class="card-text">Description</p>
+                    <div class="row p-2">
+                        <div class="input-group">
+                            <input type="text" class="form-control" aria-label="Amount (ETH)">
+                            <span class="input-group-addon">ETH</span>
+                        </div>
+                        <div class="input-group">
+                            <input type="text" class="form-control" aria-label="Trust (%)">
+                            <span class="input-group-addon">%</span>
+                            <button class="btn btn-primary btn-donate shadow-2" type="button" kitty-id="0">Donate</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">0 / 0.02 ETH</small>
                 </div>
             </div>
         </div>
@@ -172,17 +185,15 @@
     </div>
     <!-- /container -->
 
-    <!-- Bootstrap core JavaScript
-================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    <!-- ========= Bootsrap 4 - JavaScript ========= -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
         crossorigin="anonymous"></script>
 
+    <!-- ========= Local JavaScript ========= -->
     <script src="js/web3.min.js"></script>
     <script src="js/truffle-contract.js"></script>
     <script src="js/app.js"></script>
