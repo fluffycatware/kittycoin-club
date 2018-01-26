@@ -1,5 +1,4 @@
-/* eslint-env jquery */
-App = {
+var App = {
   web3Provider: null,
   contracts: {},
 
@@ -9,12 +8,12 @@ App = {
       const kittyRow = $('#kittyRow');
       const kittyTemplate = $('#kittyTemplate');
 
-      for (i = 0; i < data.length; i++) {
-        kittyTemplate.find('.panel-title').text(data[ i ].name);
-        kittyTemplate.find('img').attr('src', data[ i ].picture);
-        kittyTemplate.find('.kitty-description').text(data[ i ].description);
-        kittyTemplate.find('.kitty-location').text(data[ i ].location);
-        kittyTemplate.find('.btn-donate').attr('data-id', data[ i ].id);
+      for (var i = 0; i < data.length; i++) {
+        kittyTemplate.find('.card-title').text(data[i].name);
+        kittyTemplate.find('img').attr('src', data[i].picture);
+        kittyTemplate.find('.card-text').text(data[i].description);
+        kittyTemplate.find('.kitty-location').text(data[i].location);
+        kittyTemplate.find('.btn-donate').attr('kitty-id', data[i].id);
 
         kittyRow.append(kittyTemplate.html());
       }
@@ -31,7 +30,7 @@ App = {
       // If no injected web3 instance is detected, fall back to Ganache
       App.web3Provider = new Web3.providers.HttpProvider('http://localhost:7545');
     }
-    web3 = new Web3(App.web3Provider);
+    Web3 = new Web3(App.web3Provider);
 
     return App.initContract();
   },
@@ -64,8 +63,8 @@ App = {
 
       return donationInstance.getDonators.call();
     }).then((donators) => {
-      for (i = 0; i < donators.length; i++) {
-        if (donators[ i ] !== '0x0000000000000000000000000000000000000000') {
+      for (var i = 0; i < donators.length; i++) {
+        if (donators[i] !== '0x0000000000000000000000000000000000000000') {
           $('.panel-kitty').eq(i).find('button').text('Success').attr('disabled', true);
         }
       }
@@ -86,7 +85,7 @@ App = {
         console.log(error);
       }
 
-      const account = accounts[ 0 ];
+      const account = accounts[0];
 
       App.contracts.DonationFactory.deployed().then((instance) => {
         donationInstance = instance;
@@ -103,8 +102,8 @@ App = {
 
 };
 
-$(() => {
-  $(window).load(() => {
+jQuery(document).ready(
+  function ($) {
     App.init();
-  });
-});
+  }
+);
