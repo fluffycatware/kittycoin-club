@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Smart Contract system for animal rescue donations">
+    <meta name="author" content="Nathan Glover">
+    <link rel="shortcut icon" href="assets/img/favicon.ico">
+
+    <title>KittyCoin Club</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
+        crossorigin="anonymous">
+
+    <!-- Custom styles for this template -->
+    <link href="assets/css/main.css" rel="stylesheet">
+
+    <!-- Fonts from Google Fonts -->
+    <link href='https://fonts.googleapis.com/css?family=Lato:300,400,900' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+    <!-- Fixed navbar -->
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">
+                    <b>KittyCoin Club</b>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div id="headerwrap">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h1>Hi There 😻
+                        <br/> You're kinda Pawsome!</h1>
+                </div>
+                <!-- /col-sm-4-->
+                <div class="col-sm-4">
+                    <img class="responsive-image" src="assets/img/cat-landing-page.png" alt="">
+                </div>
+                <!-- /col-sm-4 -->
+
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /headerwrap -->
+
+    <div class="container">
+        <div class="row mt centered">
+            <div class="col-sm-12">
+                <h1>Fluffy Guests!</h1>
+                <h3>We're all currently looking for happy homes!</h3>
+            </div>
+        </div>
+        <!-- /row -->
+
+        <div id="kitty-row" class="row card-columns">
+            <!-- Kitten Load Here -->
+        </div>
+    </div>
+
+    <div id="kitty-template" style="display: none;">
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="ribbon card-kitty">
+                <div class="card shadow-1">
+
+                    <!-- Kitty Name -->
+                    <h4 class="card-title">Name</h4>
+                    
+                    <!-- Kitty Image -->
+                    <img class="card-img-top" src="assets/img/kitties/1.jpg" style="width:100%">
+                    
+                    <div class="card-block">
+
+                        <!-- Kitty Description -->
+                        <p class="card-text">Description</p>
+
+                        <!-- Kitty Donation Form -->
+                        <div class="row">
+                            <div class="input-group p-1">
+                                <!-- Kitty Donation Amount -->
+                                <input class="form-control" type="number" value="0.001" id="kitty-donation" aria-label="Amount (ETH)">
+                                <span class="input-group-addon">ETH</span>
+                            </div>
+                            <div class="input-group p-1">
+                                <!-- Kitty Donation Button -->
+                                <button class="btn btn-primary btn-donate" type="button" kitty-id="0">Donate</button>
+                                <!-- Kitty Donation Percent -->
+                                <input class="form-control" type="number" value="0" id="kitty-percent" aria-label="Trust (%)">
+                                <span class="input-group-addon">%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /card-block -->
+
+                    <div class="card-footer">
+                        <!-- Kitty Donation Bar -->
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 20%" aria-valuenow="20%"
+                                aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                        <small class="text-muted">0.0005 / 0.002 ETH</small>
+                    </div>
+                    <!-- /card-footer -->
+
+                </div>
+                <!-- /card -->
+            </div>
+            <!-- /ribbon -->
+        </div>
+        <!-- /col-lg-4 /col-md-6 /col-sm-12 -->
+    </div>
+
+    </div>
+    <!-- /container -->
+
+    <div class="container">
+        <hr>
+    </div>
+    <!-- /container -->
+
+    <div class="container">
+        <div class="row mt centered">
+            <div class="col-lg-12">
+                <h1>Want to get Involved?</h1>
+                <h3>Here's some way you can!</h3>
+            </div>
+        </div>
+        <!-- /row -->
+
+
+        <div class="row mt centered">
+            <div class="col-lg-4">
+                <img class="img-circle" src="assets/img/option-01.png" width="140" alt="">
+                <h4>Adoption</h4>
+                <p>All a cat needs is a loving home, and if you're looking to do that for one of them they'll reward you with
+                    their un-devoted love ❤️</p>
+                <p>
+                    <i class="glyphicon glyphicon-send"></i>
+                    <i class="glyphicon glyphicon-phone"></i>
+                    <i class="glyphicon glyphicon-globe"></i>
+                </p>
+            </div>
+            <!--/col-lg-4 -->
+
+            <div class="col-lg-4">
+                <img class="img-circle" src="assets/img/option-02.png" width="140" alt="">
+                <h4>Fostering</h4>
+                <p>Looking to help out temporarily? Fostering is a great way to help take load off the busy cat shelters. It's
+                    also a great way to see what living with a cat is like!</p>
+                <p>
+                    <i class="glyphicon glyphicon-send"></i>
+                    <i class="glyphicon glyphicon-phone"></i>
+                    <i class="glyphicon glyphicon-globe"></i>
+                </p>
+            </div>
+            <!--/col-lg-4 -->
+
+            <div class="col-lg-4">
+                <img class="img-circle" src="assets/img/option-03.png" width="140" alt="">
+                <h4>Donations</h4>
+                <p>Help another carer of even a cat shelter by donating he cost of food or litter. It can be a bit much looking
+                    after cats while they find new homes, so your support is always welcomed.</p>
+                <p>
+                    <i class="glyphicon glyphicon-send"></i>
+                    <i class="glyphicon glyphicon-phone"></i>
+                    <i class="glyphicon glyphicon-globe"></i>
+                </p>
+            </div>
+            <!--/col-lg-4 -->
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+
+    <div class="container">
+        <div class="row centered">
+            <div class="col-md-6">
+                <p>What to stay informed? Subscribe to our newsletter!</p>
+            </div>
+            <div class="col-md-6">
+                <form class="form-inline" role="form">
+                    <div class="form-group">
+                        <!-- TODO: Add news letter send button -->
+                        <input type="email" class="form-control" id="newsletterSubscribe" placeholder="Enter your email!">
+                    </div>
+                    <button type="submit" class="btn btn-warning">Invite Me!</button>
+                </form>
+            </div>
+        </div>
+        <!-- /row -->
+        <hr>
+        <p class="centered">Created by Nathan Glover - Attribution License 3.0 - 2018</p>
+    </div>
+    <!-- /container -->
+
+    <!-- ========= Bootsrap 4 - JavaScript ========= -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+        crossorigin="anonymous"></script>
+
+    <!-- ========= Local JavaScript ========= -->
+    <script src="js/web3.min.js"></script>
+    <script src="js/truffle-contract.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>

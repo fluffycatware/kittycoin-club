@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 
-rm -rf dist
-cp -R src/ dist/
+rm -rf docs
+cp -R src/ docs/
+cp CNAME docs/

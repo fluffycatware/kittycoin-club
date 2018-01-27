@@ -32,9 +32,6 @@ npm-debug.log
 # truffle build directory
 build/
 
-# gh-pages
-dist/
-
 ## Jetbrains
 .idea
 

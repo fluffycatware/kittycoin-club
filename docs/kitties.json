@@ -1,0 +1,30 @@
+[
+  {
+    "id": 0,
+    "name": "Tortalina",
+    "picture": "assets/img/kitties/0.jpg",
+    "location": "Perth, Western Australia",
+    "description": "I just had a litter of kittens and am super confused about why that happened!"
+  },
+  {
+    "id": 1,
+    "name": "Felix",
+    "picture": "assets/img/kitties/1.jpg",
+    "location": "Perth, Western Australia",
+    "description": "Play Hard, Nap Hard is my motto. I get along better with my human playmates!."
+  },
+  {
+    "id": 2,
+    "name": "Pixel",
+    "picture": "assets/img/kitties/2.jpg",
+    "location": "Perth, Western Australia",
+    "description": "I was shy at first but have grown to love playing with people and other kitties."
+  },
+  {
+    "id": 3,
+    "name": "Calipso",
+    "picture": "assets/img/kitties/3.jpg",
+    "location": "Perth, Western Australia",
+    "description": "All I want to do was snuggle up to my human. Maybe you can be my new human?"
+  }
+]
