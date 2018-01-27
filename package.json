@@ -73,6 +73,7 @@
     "compile": "truffle compile",
     "console": "truffle console",
     "migrate": "truffle migrate",
-    "coverage": "scripts/coverage.sh"
+    "coverage": "scripts/coverage.sh",
+    "deploy":"scripts/gh-pages.sh"
   }
 }
