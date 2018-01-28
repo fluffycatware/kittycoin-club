@@ -16,5 +16,4 @@ truffle.js
 
 ## Web Frontend
 /src/js/app.js
-/src/js/truffle-contract.js
-/src/js/web3.min.js
+/src/js/lib/**
