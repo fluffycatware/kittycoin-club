@@ -1,12 +1,16 @@
 pragma solidity ^0.4.18;
 
 import "./ownership/Ownable.sol";
+import "./mocks/SafeMathMock.sol";
 
 
 /// @title KittyCoinClub
 /// @author Nathan Glover
 /// @notice KittyCoinClub contract is the main input to the this DApp, it controls the supply of KittyCoins in circulation and other utilities perdinant to the contract a a whole
 contract KittyCoinClub is Ownable {
+
+    /* Libraries */
+    using SafeMath for uint256;
 
     /* Contract owner */
     address owner;
@@ -42,10 +46,10 @@ contract KittyCoinClub is Ownable {
 
     struct Donation {
         uint kittyId;
-        uint trustAmount;
-        uint fosterAmount;
         address trustAddress;
         address fosterAddress;
+        uint trustAmount;
+        uint fosterAmount;
     }
 
     struct Kitty {
@@ -95,6 +99,9 @@ contract KittyCoinClub is Ownable {
     mapping (uint => address) trustAddressLookup;
     mapping (address => uint) trustIdLookup;
 
+
+    mapping (address => uint) public pendingWithdrawals; // ETH pending for address
+
     /*
      ______               _       
     |  ____|             | |      
@@ -119,16 +126,57 @@ contract KittyCoinClub is Ownable {
     */
     /// @notice Throws if called by any account other then the owner of the trust being modified
     modifier onlyTrustOwner(uint _trustId) {
-        require(msg.sender == trustAddressLookup[_trustId]);
+        require(trustAddressLookup[_trustId] == msg.sender);
         _;
     }
 
+    /// @notice Throws if called by any account that is a not a trust
+    modifier onlyTrust() {
+        require(trustIdLookup[msg.sender] != 0);
+        _;
+    }
+
+    /*
+      _____                _                   _             
+     / ____|              | |                 | |            
+    | |     ___  _ __  ___| |_ _ __ _   _  ___| |_ ___  _ __ 
+    | |    / _ \| '_ \/ __| __| '__| | | |/ __| __/ _ \| '__|
+    | |___| (_) | | | \__ \ |_| |  | |_| | (__| || (_) | |   
+     \_____\___/|_| |_|___/\__|_|   \__,_|\___|\__\___/|_|   
+    */
     /// @notice Contructor for the KittCoinClub contract
     function KittyCoinClub() payable public {
         owner = msg.sender;
         assert((remainingKittyCoins + remainingFounderCoins) == totalSupply);
     }
 
+    /*
+    __          __   _ _      _     _    _      _                     
+    \ \        / /  | | |    | |   | |  | |    | |                    
+     \ \  /\  / /_ _| | | ___| |_  | |__| | ___| |_ __   ___ _ __ ___ 
+      \ \/  \/ / _` | | |/ _ \ __| |  __  |/ _ \ | '_ \ / _ \ '__/ __|
+       \  /\  / (_| | | |  __/ |_  | |  | |  __/ | |_) |  __/ |  \__ \
+        \/  \/ \__,_|_|_|\___|\__| |_|  |_|\___|_| .__/ \___|_|  |___/
+                                                | |
+                                                |_|   
+    */
+    /// @notice Allows the withdrawal of any owed currency to a sender
+    function withdraw() public {
+        uint amount = pendingWithdrawals[msg.sender];
+        pendingWithdrawals[msg.sender] = 0;
+        msg.sender.transfer(amount);
+    }
+
+    /*
+                                              _          _____      _   _                
+        /\                                   | |        / ____|    | | | |               
+       /  \   __ _  __ _ _ __ ___  __ _  __ _| |_ ___  | |  __  ___| |_| |_ ___ _ __ ___ 
+      / /\ \ / _` |/ _` | '__/ _ \/ _` |/ _` | __/ _ \ | | |_ |/ _ \ __| __/ _ \ '__/ __|
+     / ____ \ (_| | (_| | | |  __/ (_| | (_| | ||  __/ | |__| |  __/ |_| ||  __/ |  \__ \
+    /_/    \_\__, |\__, |_|  \___|\__, |\__,_|\__\___|  \_____|\___|\__|\__\___|_|  |___/
+            __/ | __/ |          __/ |                                                 
+            |___/ |___/          |___/                                                  
+    */
     /// @notice Retrieves an array containing all KittyCoin's owned by an address. This function makes use of contract memory while it populates the array of results.
     /// @param _owner The address of the owner to find kittycoins for
     function getKittyCoinsByOwner(address _owner) external view returns(uint[]) {
@@ -171,9 +219,7 @@ contract KittyCoinClub is Ownable {
         NewKittyCoin(id, _kittyId, _donationId, _seed);
     }
 
-    //TODO decide if I want to allow an inital purchase of not
     //TODO work out if changing this input parameter to a uint is bad
-
     /// @notice Generates the random seed based on an input string
     /// @param _kittyTraits input seed for the randomly generated coin
     /// @return a random seed
@@ -220,14 +266,14 @@ contract KittyCoinClub is Ownable {
         //TODO Execute the transaction
         // 'id' is the index of the donation in the array of donations
         uint id = donations.push(
-            Donation(_kittyId, _trustAmount, _fosterAmount, _trustAddress, _fosterAddress)
+            Donation(_kittyId, _trustAddress, _fosterAddress, _trustAmount, _fosterAmount)
             ) - 1;
         // Reference the donation to the sender
         donationToDonator[id] = msg.sender;
         // increment the total number of kittcoins owned for the sender
         donatorDonationCount[msg.sender]++;
-        //TODO Implement SafeMaths
-        uint totalAmount = _trustAmount + _fosterAmount;
+        // Safe Maths sum total
+        uint256 totalAmount = SafeMath.add(_trustAmount, _fosterAmount);
         // Return an event for the newly created donation
         NewDonation(id, _kittyId, totalAmount);
     }
@@ -236,21 +282,21 @@ contract KittyCoinClub is Ownable {
     /// @param _kittyId The id of the kitty being donated to
     /// @param _amount The total amount being donated
     /// @param _ratio The percentage that should go to the foster carer
-    function makeDonation(uint _kittyId, uint _amount, uint _ratio) public {
-        // Confirm the ratio is a valid percentage equivilent
+    function makeDonation(uint _kittyId, uint _amount, uint _ratio) payable public {
+        require(msg.value > 0);
+        require(msg.value > _amount);
         require(_ratio <= 100 && _ratio >= 0);
-        // Ensure that donations are available on the kitty
         require(kitties[_kittyId].donationsEnabled);
 
-        //TODO Implement SafeMaths - This is awful
-        uint donationTotal = _amount;
-        uint fosterAmount = _amount * (_ratio / 100);
-        uint fosterOverflow;
+        // Safe Maths ratio of donation
+        uint256 donationTotal = _amount;
+        uint256 fosterAmount = SafeMath.mul(_amount, SafeMath.div(_ratio, 100));
+        uint256 fosterOverflow;
         if (fosterAmount > kitties[_kittyId].donationCap) {
-            fosterOverflow = fosterAmount - kitties[_kittyId].donationCap;
-            fosterAmount = fosterAmount - fosterOverflow;
+            fosterOverflow = SafeMath.sub(fosterAmount, kitties[_kittyId].donationCap);
+            fosterAmount = SafeMath.sub(fosterAmount, fosterOverflow);
         }
-        uint trustAmount = donationTotal - fosterAmount + fosterOverflow;
+        uint256 trustAmount = SafeMath.sub(donationTotal, SafeMath.add(fosterAmount, fosterOverflow));
         // Validate the maths worked correctly
         assert(_amount == (trustAmount + fosterAmount));
 
@@ -296,9 +342,7 @@ contract KittyCoinClub is Ownable {
     uint traitDigits = 16;
     uint kittySeedModulus = 10 ** traitDigits;
 
-    //TODO Confirm that this is called by a trust
-
-    /// @notice Creates a new kitty which goes up for donation
+    /// @notice private function to create a new kitty which goes up for donation
     /// @param _enabled Toggles the donation status on this kitty
     /// @param _trustAddr The wallet address of the trust
     /// @param _fosterAddr The wallet address of the foster carer
@@ -322,6 +366,14 @@ contract KittyCoinClub is Ownable {
         trustKittyCount[msg.sender]++;
         // Return an event for the newly created kitty
         NewKitty(id, _traitSeed);
+    }
+
+    /// @notice Creates a new kitty which goes up for donation
+    /// @param _fosterAddress The wallet address of the foster carer
+    /// @param _traitSeed Unique traits for this kitty
+    /// @param _donationCap The maximum amount that the carer can receive
+    function createKitty(address _fosterAddress, uint _traitSeed, uint _donationCap) onlyTrust public {
+        _createKitty(true, msg.sender, _fosterAddress, _traitSeed, _donationCap);
     }
     
     /*
@@ -373,9 +425,9 @@ contract KittyCoinClub is Ownable {
     /// @return a boolean defining if a given address belongs to a trust
     function isTrustAddress(address _address) public view returns (bool) {
         if (trustIdLookup[_address] != 0) {
-            return false;
-        } else {
             return true;
+        } else {
+            return false;
         }
     }
 }
