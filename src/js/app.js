@@ -35,13 +35,13 @@ var App = {
   },
 
   initContract () {
-    $.getJSON('DonationFactory.json', (data) => {
+    $.getJSON('KittyCoinClub.json', (data) => {
       // Get the necessary contract artifact file and instantiate it with truffle-contract
-      const DonationFactoryArtifact = data;
-      App.contracts.DonationFactory = TruffleContract(DonationFactoryArtifact);
+      const KittyCoinClubArtifact = data;
+      App.contracts.KittyCoinClub = TruffleContract(KittyCoinClubArtifact);
 
       // Set the provider for our contract
-      App.contracts.DonationFactory.setProvider(App.web3Provider);
+      App.contracts.KittyCoinClub.setProvider(App.web3Provider);
 
       // User our contract to retrieve the kitties with donations
       return App.markDonatedTo();
@@ -55,10 +55,10 @@ var App = {
   },
 
   markDonatedTo (donators, account) {
-    let donationInstance;
+    let kittyCoinClub;
 
-    App.contracts.DonationFactory.deployed().then((instance) => {
-      donationInstance = instance;
+    App.contracts.KittyCoinClub.deployed().then((instance) => {
+      kittyCoinClub = instance;
 
       return donationInstance.getDonators.call();
     }).then((donators) => {
@@ -77,7 +77,7 @@ var App = {
 
     const kittyId = parseInt($(event.target).data('id'));
 
-    let donationInstance;
+    let kittyCoinClub;
 
     web3.eth.getAccounts((error, accounts) => {
       if (error) {
@@ -86,11 +86,11 @@ var App = {
 
       const account = accounts[0];
 
-      App.contracts.DonationFactory.deployed().then((instance) => {
-        donationInstance = instance;
+      App.contracts.KittyCoinClub.deployed().then((instance) => {
+        kittyCoinClub = instance;
 
         // Execute donate as a transaction by sending account
-        return donationInstance.donate(kittyId, {
+        return kittyCoinClub.donate(kittyId, {
           from: account,
         });
       }).then(result => App.markDonatedTo()).catch((err) => {

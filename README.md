@@ -14,6 +14,10 @@
 
 This repository houses the [kittycoin.club](https://kittycoin.club)'s donation system. It has been built using Ethereum smart contracts.
 
+## Contract Design
+
+<img src="https://raw.github.com/fluffycatware/kittycoin-club/master/img/KittyCoinClub-design.png" data-canonical-src="https://raw.github.com/fluffycatware/kittycoin-club/master/img/KittyCoinClub-design.png" align="center"/>
+
 ## Developing This Contract
 
 In order to develop this contract the following steps were taken to setup the environment.
