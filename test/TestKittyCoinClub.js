@@ -9,8 +9,6 @@ contract('KittyCoinClub', function (accounts) {
   let kittycoinclub;
   const owner = accounts[0];
   const trust = accounts[1];
-  const foster = accounts[2];
-  const donator = accounts[3];
 
   beforeEach(async function () {
     kittycoinclub = await KittyCoinClub.new({ from: owner });
