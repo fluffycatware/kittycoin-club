@@ -1,45 +1,136 @@
 pragma solidity ^0.4.18;
 
-import "./KittyCoinFactory.sol";
+import "./ownership/Ownable.sol";
 
-/**
- * @title KittyCoinClub
- * @author Nathan Glover
- * @notice KittyCoinClub contract is the main input to the this DApp, it controls the 
- * supply of KittyCoins in circulation and other utilities perdinant to the contract a a whole
- */
-contract KittyCoinClub is KittyCoinFactory {
+
+/// @title KittyCoinClub
+/// @author Nathan Glover
+/// @notice KittyCoinClub contract is the main input to the this DApp, it controls the supply of KittyCoins in circulation and other utilities perdinant to the contract a a whole
+contract KittyCoinClub is Ownable {
 
     /* Contract owner */
     address owner;
 
+    /*
+      _______    _                _____       _        _ _     
+     |__   __|  | |              |  __ \     | |      (_) |    
+        | | ___ | | _____ _ __   | |  | | ___| |_ __ _ _| |___ 
+        | |/ _ \| |/ / _ \ '_ \  | |  | |/ _ \ __/ _` | | / __|
+        | | (_) |   <  __/ | | | | |__| |  __/ || (_| | | \__ \
+        |_|\___/|_|\_\___|_| |_| |_____/ \___|\__\__,_|_|_|___/
+    */
     string public name = "KittyCoinClub"; // Name for display purposes
     string public symbol = "🐱"; // unicode cat symbol for display purposes
     uint8 public decimals = 0; // Amount of decimals for display purposes
-    
-    /* Coin supply details */
     uint256 public totalSupply = 25600;
     uint16 public remainingKittyCoins = 25600 - 256; // there will only ever be 25,000 cats
     uint16 public remainingFounderCoins = 256; // there can only be a maximum of 256 founder coins
-
-    // gets set with the immediately preceding blockhash when 
-    // the contract is activated to prevent "premining"
-    bytes32 public searchSeed = 0x0;
     
-    /**
-    * @notice Contructor for the KittCoinClub contract
+    /*
+     _____ _                   _       
+    / ____| |                 | |      
+   | (___ | |_ _ __ _   _  ___| |_ ___ 
+    \___ \| __| '__| | | |/ __| __/ __|
+    ____) | |_| |  | |_| | (__| |_\__ \
+   |_____/ \__|_|   \__,_|\___|\__|___/
     */
+    struct KittyCoin {
+        uint kittyId;
+        uint donationId;
+        uint coinSeed;
+    }
+
+    struct Donation {
+        uint kittyId;
+        uint trustAmount;
+        uint fosterAmount;
+        address trustAddress;
+        address fosterAddress;
+    }
+
+    struct Kitty {
+        bool donationsEnabled;
+        address trustAddress;
+        address fosterAddress;
+        uint kittyTraitSeed;
+        uint donationCap;
+    }
+
+    struct Trust {
+        bool trustEnabled;
+        address trustAddress;
+    }
+
+    /*
+    _____        _                                            
+    |  __ \      | |            /\                             
+    | |  | | __ _| |_ __ _     /  \   _ __ _ __ __ _ _   _ ___ 
+    | |  | |/ _` | __/ _` |   / /\ \ | '__| '__/ _` | | | / __|
+    | |__| | (_| | || (_| |  / ____ \| |  | | | (_| | |_| \__ \
+    |_____/ \__,_|\__\__,_| /_/    \_\_|  |_|  \__,_|\__, |___/
+                                                    __/ |    
+                                                    |___/     
+    */
+    KittyCoin[] public kittyCoins;
+    Donation[] public donations;
+    Kitty[] public kitties;
+    Trust[] public trusts;
+
+    /*
+     __  __                   _                 
+    |  \/  |                 (_)                
+    | \  / | __ _ _ __  _ __  _ _ __   __ _ ___ 
+    | |\/| |/ _` | '_ \| '_ \| | '_ \ / _` / __|
+    | |  | | (_| | |_) | |_) | | | | | (_| \__ \
+    |_|  |_|\__,_| .__/| .__/|_|_| |_|\__, |___/
+                | |   | |             __/ |    
+                |_|   |_|            |___/     
+    */
+    mapping (uint => address) public kittyCoinToOwner;
+    mapping (address => uint) ownerKittyCoinCount;
+    mapping (uint => address) public donationToDonator;
+    mapping (address => uint) donatorDonationCount;
+    mapping (uint => address) public kittyToTrust;
+    mapping (address => uint) trustKittyCount;
+    mapping (uint => address) trustAddressLookup;
+    mapping (address => uint) trustIdLookup;
+
+    /*
+     ______               _       
+    |  ____|             | |      
+    | |____   _____ _ __ | |_ ___ 
+    |  __\ \ / / _ \ '_ \| __/ __|
+    | |___\ V /  __/ | | | |_\__ \
+    |______\_/ \___|_| |_|\__|___/
+    */
+    event NewKittyCoin(uint kittyCoinId, uint kittyId, uint donationId, uint coinSeed);
+    event NewDonation(uint donationId, uint kittyId, uint donationAmount);
+    event NewKitty(uint kittyId, uint traitsId);
+    event NewTrust(uint trustId);
+    event ChangedTrustAddress(uint trustId, address trustAddr);
+
+    /*
+     __  __           _ _  __ _               
+    |  \/  |         | (_)/ _(_)              
+    | \  / | ___   __| |_| |_ _  ___ _ __ ___ 
+    | |\/| |/ _ \ / _` | |  _| |/ _ \ '__/ __|
+    | |  | | (_) | (_| | | | | |  __/ |  \__ \
+    |_|  |_|\___/ \__,_|_|_| |_|\___|_|  |___/
+    */
+    /// @notice Throws if called by any account other then the owner of the trust being modified
+    modifier onlyTrustOwner(uint _trustId) {
+        require(msg.sender == trustAddressLookup[_trustId]);
+        _;
+    }
+
+    /// @notice Contructor for the KittCoinClub contract
     function KittyCoinClub() payable public {
         owner = msg.sender;
         assert((remainingKittyCoins + remainingFounderCoins) == totalSupply);
     }
 
-    /**
-    * @notice Retrieves an array containing all KittyCoin's owned
-    * by an address. This function makes use of contract memory
-    * while it populates the array of results.
-    * @param _owner The address of the owner to find kittycoins for
-    */
+    /// @notice Retrieves an array containing all KittyCoin's owned by an address. This function makes use of contract memory while it populates the array of results.
+    /// @param _owner The address of the owner to find kittycoins for
     function getKittyCoinsByOwner(address _owner) external view returns(uint[]) {
         uint[] memory result = new uint[](ownerKittyCoinCount[_owner]);
         uint counter = 0;
@@ -50,5 +141,241 @@ contract KittyCoinClub is KittyCoinFactory {
             }
         }
         return result;
+    }
+
+    /*
+     _  ___ _   _          _____      _       
+    | |/ (_) | | |        / ____|    (_)      
+    | ' / _| |_| |_ _   _| |     ___  _ _ __  
+    |  < | | __| __| | | | |    / _ \| | '_ \ 
+    | . \| | |_| |_| |_| | |___| (_) | | | | |
+    |_|\_\_|\__|\__|\__, |\_____\___/|_|_| |_|
+                    __/ |                    
+                    |___/                     
+    */
+    uint coinDigits = 16;
+    uint coinSeedModulus = 10 ** coinDigits;
+
+    /// @notice generate the KittyCoin's safely
+    /// @param _kittyId identifier of the kitty who recieved the donation for this coin
+    /// @param _donationId donation identifier that is linked to this coin
+    /// @param _seed the generated seed
+    function _createKittyCoin(uint _kittyId, uint _donationId, uint _seed) internal {
+        // 'id' is the index of the kittycoin in the array of kittycoins
+        uint id = kittyCoins.push(KittyCoin(_kittyId, _donationId, _seed)) - 1;
+        // assign the owner of the kittycoin to the sender
+        kittyCoinToOwner[id] = msg.sender;
+        // increment the total number of kittcoins owned for the sender
+        ownerKittyCoinCount[msg.sender]++;
+        // Send an event alerting the KittyCoins creation
+        NewKittyCoin(id, _kittyId, _donationId, _seed);
+    }
+
+    //TODO decide if I want to allow an inital purchase of not
+    //TODO work out if changing this input parameter to a uint is bad
+
+    /// @notice Generates the random seed based on an input string
+    /// @param _kittyTraits input seed for the randomly generated coin
+    /// @return a random seed
+    function _generateRandomSeed(uint _kittyTraits) private view returns (uint) {
+        uint rand = uint(keccak256(_kittyTraits));
+        return rand * coinSeedModulus;
+    }
+    
+    /// @notice Generates a Kitty coin for a donation that has been made
+    /// @param _donationId donation to be used to generate the coin
+    function createRandomKittyCoin(uint _donationId) public {
+        // Confirm that the owner doesn't have any kittycoins
+        require(ownerKittyCoinCount[msg.sender] == 0);
+        // Get the kitty information from the donation
+        uint kittyId = getDonation(_donationId).kittyId;
+        uint kittyTraitSeed = kitties[kittyId].kittyTraitSeed;
+        // the seed for the kittycoin is generated based on the input string
+        uint randSeed = _generateRandomSeed(kittyTraitSeed);
+        // The cat is created by a private function
+        _createKittyCoin(kittyId, _donationId, randSeed);
+    }
+
+    /*
+     _____                    _   _             
+    |  __ \                  | | (_)            
+    | |  | | ___  _ __   __ _| |_ _  ___  _ __  
+    | |  | |/ _ \| '_ \ / _` | __| |/ _ \| '_ \ 
+    | |__| | (_) | | | | (_| | |_| | (_) | | | |
+    |_____/ \___/|_| |_|\__,_|\__|_|\___/|_| |_|                                        
+    */
+    /// @notice Performs a donation based on the computed variables from the donator.
+    /// @param _kittyId The id of the kitty being donated to
+    /// @param _trustAmount The amount being donated to the trust
+    /// @param _fosterAmount The amount being donated to the foster carer
+    /// @param _trustAddress The wallet address of the trust
+    /// @param _fosterAddress The wallet address of the foster carer
+    function _donate(
+        uint _kittyId, 
+        uint _trustAmount, 
+        uint _fosterAmount, 
+        address _trustAddress, 
+        address _fosterAddress) internal
+        {
+        //TODO Execute the transaction
+        // 'id' is the index of the donation in the array of donations
+        uint id = donations.push(
+            Donation(_kittyId, _trustAmount, _fosterAmount, _trustAddress, _fosterAddress)
+            ) - 1;
+        // Reference the donation to the sender
+        donationToDonator[id] = msg.sender;
+        // increment the total number of kittcoins owned for the sender
+        donatorDonationCount[msg.sender]++;
+        //TODO Implement SafeMaths
+        uint totalAmount = _trustAmount + _fosterAmount;
+        // Return an event for the newly created donation
+        NewDonation(id, _kittyId, totalAmount);
+    }
+
+    /// @notice Performs a donation, computing the ratio of the funds that should go to the trust and the foster carer. If the foster carer has reached their limit for donations when the amount goes to the trust.
+    /// @param _kittyId The id of the kitty being donated to
+    /// @param _amount The total amount being donated
+    /// @param _ratio The percentage that should go to the foster carer
+    function makeDonation(uint _kittyId, uint _amount, uint _ratio) public {
+        // Confirm the ratio is a valid percentage equivilent
+        require(_ratio <= 100 && _ratio >= 0);
+        // Ensure that donations are available on the kitty
+        require(kitties[_kittyId].donationsEnabled);
+
+        //TODO Implement SafeMaths - This is awful
+        uint donationTotal = _amount;
+        uint fosterAmount = _amount * (_ratio / 100);
+        uint fosterOverflow;
+        if (fosterAmount > kitties[_kittyId].donationCap) {
+            fosterOverflow = fosterAmount - kitties[_kittyId].donationCap;
+            fosterAmount = fosterAmount - fosterOverflow;
+        }
+        uint trustAmount = donationTotal - fosterAmount + fosterOverflow;
+        // Validate the maths worked correctly
+        assert(_amount == (trustAmount + fosterAmount));
+
+        // Make the donation
+        _donate(
+            _kittyId, 
+            trustAmount, 
+            fosterAmount, 
+            kitties[_kittyId].trustAddress, 
+            kitties[_kittyId].fosterAddress
+            );
+    }
+    
+    /// @notice Performs a donation, computing the ratio of the funds that should go to the trust and the foster carer. If the foster carer has reached their limit for donations when the amount goes to the trust.
+    /// @param _donator Donator address
+    /// @return an array of donation identifiers
+    function getDonationsByDonator(address _donator) external view returns(uint[]) {
+        uint[] memory result = new uint[](donatorDonationCount[_donator]);
+        uint counter = 0;
+        for (uint i = 0; i < donations.length; i++) {
+            if (donationToDonator[i] == _donator) {
+                result[counter] = i;
+                counter++;
+            }
+        }
+        return result;
+    }
+
+    function getDonation(uint _donationId) public view returns(Donation) {
+        return donations[_donationId];
+    }
+
+    /*
+     _  ___ _   _         
+    | |/ (_) | | |        
+    | ' / _| |_| |_ _   _ 
+    |  < | | __| __| | | |
+    | . \| | |_| |_| |_| |
+    |_|\_\_|\__|\__|\__, |
+                    __/ |
+                    |___/ 
+    */
+    uint traitDigits = 16;
+    uint kittySeedModulus = 10 ** traitDigits;
+
+    //TODO Confirm that this is called by a trust
+
+    /// @notice Creates a new kitty which goes up for donation
+    /// @param _enabled Toggles the donation status on this kitty
+    /// @param _trustAddr The wallet address of the trust
+    /// @param _fosterAddr The wallet address of the foster carer
+    /// @param _traitSeed Unique traits for this kitty
+    /// @param _donationCap The maximum amount that the carer can receive
+    function _createKitty(
+        bool _enabled, 
+        address _trustAddr, 
+        address _fosterAddr, 
+        uint _traitSeed, 
+        uint _donationCap
+        ) internal
+        {   
+        // 'id' is the index of the kitty in the array of kitties
+        uint id = kitties.push(
+            Kitty(_enabled, _trustAddr, _fosterAddr, _traitSeed, _donationCap)
+            ) - 1;
+        // Reference the donation to the sender
+        kittyToTrust[id] = msg.sender;
+        // increment the total number of kittcoins owned for the sender
+        trustKittyCount[msg.sender]++;
+        // Return an event for the newly created kitty
+        NewKitty(id, _traitSeed);
+    }
+    
+    /*
+      _______             _   
+     |__   __|           | |  
+        | |_ __ _   _ ___| |_ 
+        | | '__| | | / __| __|
+        | | |  | |_| \__ \ |_ 
+        |_|_|   \__,_|___/\__|
+    */
+    /// @notice Private trust creation that is handled internally
+    /// @param _enabled Is the trust enabled
+    /// @param _trustAddr The address to link this trust to
+    function _createTrust(bool _enabled, address _trustAddr) internal {
+        // 'id' is the index of the trust in the array of trusts
+        uint id = trusts.push(Trust(_enabled, _trustAddr)) - 1;
+        // Map both the address to the trust
+        // and the trust to the address
+        trustAddressLookup[id] = _trustAddr;
+        trustIdLookup[_trustAddr] = id;
+        // Send an event alerting the Trusts creation
+        NewTrust(id);
+    }
+
+    /// @notice Allows the contract owner to add a new trust
+    /// @param _trustAddr The address to link this trust to
+    function createTrust(address _trustAddr) onlyOwner public {
+        _createTrust(true, _trustAddr);
+    }
+
+    /// @notice Allows the contract owner to enable and disable trusts
+    /// @param _id The id of the trust that should be toggled
+    /// @param _enabled A boolean true or false, where true is to enable and false is to disable the trust
+    function toggleTrust(uint _id, bool _enabled) onlyOwner public {
+        trusts[_id].trustEnabled = _enabled;
+    }
+
+    /// @dev Allows a trust to change their address
+    /// @param _id The id of the trust where the address wants to be altered; the msg.sender must match the address in the id being changed
+    /// @param _newTrustAddr The new trust address to be set
+    function changeTrustAddress(uint _id, address _newTrustAddr) onlyTrustOwner(_id) public {
+        trusts[_id].trustAddress = _newTrustAddr;
+        trustAddressLookup[_id] = _newTrustAddr;
+        ChangedTrustAddress(_id, _newTrustAddr);
+    }
+
+    /// @dev Checks if a given address belongs to a trust
+    /// @param _address is the address that needs to be checked
+    /// @return a boolean defining if a given address belongs to a trust
+    function isTrustAddress(address _address) public view returns (bool) {
+        if (trustIdLookup[_address] != 0) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

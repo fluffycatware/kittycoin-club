@@ -33,10 +33,10 @@ contract('KittyCoinClub', function (accounts) {
     assert(totalSupply.eq(25600));
   });
 
-  it('should allow a random kittycoin with name `Gracie`', async function () {
-    await kittycoinclub.createRandomKittyCoin('Gracie')
-      .then(function (result) {
-        assert.include(result.logs[0].event, 'NewKittyCoin', 'NewKittyCoin event was not triggered');
-      });
-  });
+  // it('should allow a random kittycoin with name `Gracie`', async function () {
+  //   await kittycoinclub.createRandomKittyCoin('Gracie')
+  //     .then(function (result) {
+  //       assert.include(result.logs[0].event, 'NewKittyCoin', 'NewKittyCoin event was not triggered');
+  //     });
+  // });
 });
