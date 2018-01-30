@@ -1,6 +1,6 @@
 {
   "name": "kittycoin-club",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Donation site for cats in foster care built on smart contracts",
   "author": "Nathan Glover <nathan@glovers.id.au>",
   "license": "MIT",

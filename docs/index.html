@@ -87,25 +87,26 @@
                     <img class="card-img-top" src="assets/img/kitties/1.jpg" style="width:100%">
                     
                     <div class="card-block">
-
                         <!-- Kitty Description -->
                         <p class="card-text">Description</p>
 
                         <!-- Kitty Donation Form -->
-                        <div class="row">
-                            <div class="input-group p-1">
+                        <form>
+                            <div class="form-group input-group">
                                 <!-- Kitty Donation Amount -->
-                                <input class="form-control" type="number" value="0.001" id="kitty-donation" aria-label="Amount (ETH)">
+                                <input class="form-control kitty-donation" type="text" placeholder="0.001" aria-label="Amount (ETH)">
                                 <span class="input-group-addon">ETH</span>
                             </div>
-                            <div class="input-group p-1">
+                            <div class="form-group input-group">
                                 <!-- Kitty Donation Button -->
-                                <button class="btn btn-primary btn-donate" type="button" kitty-id="0">Donate</button>
+                                <button class="btn btn-primary btn-donate" type="submit" data-id="0">Donate</button>
                                 <!-- Kitty Donation Percent -->
-                                <input class="form-control" type="number" value="0" id="kitty-percent" aria-label="Trust (%)">
+                                <input class="form-control kitty-ratio" type="number" placeholder="0" aria-label="Trust (%)">
                                 <span class="input-group-addon">%</span>
                             </div>
-                        </div>
+                        </form>
+                        <!-- /form -->
+
                     </div>
                     <!-- /card-block -->
 
@@ -263,7 +264,7 @@
     <!-- ========= Local JavaScript ========= -->
     <script src="js/lib/kittycoinparser.js"></script>
     <script src="js/lib/web3.min.js"></script>
-    <script src="js/lib/truffle-contract.js"></script>
+    <script src="js/lib/truffle-contract.min.js"></script>
     <script src="js/app.js"></script>
     <script src="js/trust-kitty-create.js"></script>
 

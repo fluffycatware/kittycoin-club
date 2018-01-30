@@ -1,8 +1,7 @@
 var App = {
-  web3Provider: null,
   contracts: {},
 
-  init () {
+  init() {
     // Load kitties.
     $.getJSON('../kitties.json', (data) => {
       const kittyRow = $('#kitty-row');
@@ -12,7 +11,7 @@ var App = {
         kittyTemplate.find('.card-title').text(data[i].name);
         kittyTemplate.find('.card-img-top').attr('src', data[i].picture);
         kittyTemplate.find('.card-text').text(data[i].description);
-        kittyTemplate.find('.btn-donate').attr('kitty-id', data[i].id);
+        kittyTemplate.find('.btn-donate').attr('data-id', data[i].id);
 
         kittyRow.append(kittyTemplate.html());
       }
@@ -21,27 +20,25 @@ var App = {
     return App.initWeb3();
   },
 
-  initWeb3 () {
-    // Is there an injected web3 instance?
+  initWeb3() {
     if (typeof web3 !== 'undefined') {
-      App.web3Provider = web3.currentProvider;
+      web3 = new Web3(web3.currentProvider);
     } else {
-      // If no injected web3 instance is detected, fall back to Ganache
-      App.web3Provider = new Web3.providers.HttpProvider('http://localhost:7545');
+      // set the provider you want from Web3.providers
+      web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
     }
-    Web3 = new Web3(App.web3Provider);
 
     return App.initContract();
   },
 
-  initContract () {
+  initContract() {
     $.getJSON('KittyCoinClub.json', (data) => {
       // Get the necessary contract artifact file and instantiate it with truffle-contract
       const KittyCoinClubArtifact = data;
       App.contracts.KittyCoinClub = TruffleContract(KittyCoinClubArtifact);
 
       // Set the provider for our contract
-      App.contracts.KittyCoinClub.setProvider(App.web3Provider);
+      App.contracts.KittyCoinClub.setProvider(web3.currentProvider);
 
       // User our contract to retrieve the kitties with donations
       return App.markDonatedTo();
@@ -51,16 +48,17 @@ var App = {
   },
 
   bindEvents () {
-    $(document).on('click', '.btn-donate', App.handleDonation);
+    //$(document).on('click', '.btn-donate', App.handleDonation);
+    $(document).on('submit', App.handleDonation);
   },
 
-  markDonatedTo (donators, account) {
-    let kittyCoinClub;
+  markDonatedTo(donators, account) {
+    let kittyCoinClubInstance;
 
     App.contracts.KittyCoinClub.deployed().then((instance) => {
-      kittyCoinClub = instance;
+      kittyCoinClubInstance = instance;
 
-      return donationInstance.getDonators.call();
+      return kittyCoinClubInstance.getDonators.call();
     }).then((donators) => {
       for (var i = 0; i < donators.length; i++) {
         if (donators[i] !== '0x0000000000000000000000000000000000000000') {
@@ -72,25 +70,28 @@ var App = {
     });
   },
 
-  handleDonation (event) {
+  handleDonation(event) {
     event.preventDefault();
 
-    const kittyId = parseInt($(event.target).data('id'));
+    // Get the form fields
+    var kittyId = parseInt($(event.target.elements).closest('.btn-donate').data('id'));
+    var donationAmount = parseFloat($(event.target.elements)[0].value);
+    var donationRatio = parseInt($(event.target.elements)[2].value);
 
-    let kittyCoinClub;
+    var kittyCoinClubInstance;
 
     web3.eth.getAccounts((error, accounts) => {
       if (error) {
         console.log(error);
       }
 
-      const account = accounts[0];
+      var account = accounts[0];
 
       App.contracts.KittyCoinClub.deployed().then((instance) => {
-        kittyCoinClub = instance;
+        kittyCoinClubInstance = instance;
 
         // Execute donate as a transaction by sending account
-        return kittyCoinClub.donate(kittyId, {
+        return kittyCoinClubInstance.makeDonation(kittyId, donationAmount, donationRatio, {
           from: account,
         });
       }).then(result => App.markDonatedTo()).catch((err) => {

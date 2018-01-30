@@ -99,7 +99,6 @@ contract KittyCoinClub is Ownable {
     mapping (uint => address) trustAddressLookup;
     mapping (address => uint) trustIdLookup;
 
-
     mapping (address => uint) public pendingWithdrawals; // ETH pending for address
 
     /*
@@ -187,6 +186,16 @@ contract KittyCoinClub is Ownable {
                 result[counter] = i;
                 counter++;
             }
+        }
+        return result;
+    }
+
+    function getDonators() external view returns(uint[]) {
+        uint[] memory result = new uint[](donations.length);
+        uint counter = 0;
+        for (uint i = 0; i < donations.length; i++) {
+            result[counter] = i;
+            counter++;
         }
         return result;
     }
