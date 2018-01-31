@@ -1,0 +1,16 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.10.1
+ignore: {}
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  'npm:debug:20170905':
+    - truffle > mocha > debug:
+        patched: '2018-01-31T13:33:32.861Z'
+    - solidity-coverage > solidity-parser-sc > mocha > debug:
+        patched: '2018-01-31T13:33:32.861Z'
+  'npm:minimatch:20160620':
+    - solidity-coverage > solidity-parser-sc > mocha > glob > minimatch:
+        patched: '2018-01-31T13:33:32.861Z'
+  'npm:ms:20170412':
+    - solidity-coverage > solidity-parser-sc > mocha > debug > ms:
+        patched: '2018-01-31T13:33:32.861Z'
