@@ -49,12 +49,12 @@ contract('KittyCoinClub', function (accounts) {
     });
   });
 
-  // it('trust address is actually a trust', async function () {
+  // it('should confirm that ' + trust + ' is in fact a trust', async function () {
   //   await kittycoinclub.isTrustAddress(trust, {
   //     from: owner,
   //   })
   //     .then(function (result) {
-  //       assert.include(result, 'true ', 'trust address is not a trust');
+  //       assert(result, true, 'trust address is not a trust');
   //     });
   // });
 
