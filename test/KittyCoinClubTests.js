@@ -1,16 +1,14 @@
 /* eslint no-undef: "off" */
-const KittyCoinClub = artifacts.require('../contracts/KittyCoinClub');
-
-// var errorMessage = 'Error: VM Exception while processing transaction: invalid opcode';
+const KittyCoinClub = artifacts.require('KittyCoinClub');
 
 contract('KittyCoinClub', function (accounts) {
   // ----------------------------------
   // Before
   // ----------------------------------
-  let kittycoinclub;
+
   const owner = accounts[0];
   const trust = accounts[1];
-  // const foster = accounts[2];
+  let kittycoinclub;
 
   // converts strings to 32 bytes hexes
   // function stringTo32BytesHex (string) {
@@ -20,38 +18,35 @@ contract('KittyCoinClub', function (accounts) {
   // };
 
   beforeEach(async function () {
-    kittycoinclub = await KittyCoinClub.new({
-      from: owner,
-    });
+    kittycoinclub = await KittyCoinClub.new();
   });
 
-  it('has a name', async function () {
+  it('should have a name for its token', async function () {
     const name = await kittycoinclub.name();
     assert.equal(name, 'KittyCoinClub');
   });
 
-  it('has a symbol', async function () {
+  it('should have a symbol for its token', async function () {
     const symbol = await kittycoinclub.symbol();
     assert.equal(symbol, '🐱');
   });
 
-  it('has 0 decimals', async function () {
+  it('should have 0 decimals for its token', async function () {
     const decimals = await kittycoinclub.decimals();
     assert(decimals.eq(0));
   });
 
-  it('has a total kittycoin supply of 25600', async function () {
+  it('should has a total kittycoin supply of 25600 for its token', async function () {
     const totalSupply = await kittycoinclub.totalSupply();
     assert(totalSupply.eq(25600));
   });
 
-  it('owner can create a trusted address', async function () {
+  it('should allow owner to make an address trusted', async function () {
     await kittycoinclub.createTrust(trust, {
       from: owner,
-    })
-      .then(function (result) {
-        assert.include(result.logs[0].event, 'NewTrust', 'NewTrust event was not triggered');
-      });
+    }).then(function (result) {
+      assert.include(result.logs[0].event, 'NewTrust', 'NewTrust event was not triggered');
+    });
   });
 
   // it('trust address is actually a trust', async function () {
