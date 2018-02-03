@@ -92,12 +92,15 @@ contract KittyCoinClub is Ownable {
     */
     mapping (uint => address) public kittyCoinToOwner;
     mapping (address => uint) ownerKittyCoinCount;
+
     mapping (uint => address) public donationToDonator;
     mapping (address => uint) donatorDonationCount;
+
     mapping (uint => address) public kittyToTrust;
     mapping (address => uint) trustKittyCount;
-    mapping (uint => address) trustAddressLookup;
-    mapping (address => uint) trustIdLookup;
+
+    mapping (uint => address) public trustIdToAddress;
+    mapping (address => bool) public trusted;
 
     mapping (address => uint) public pendingWithdrawals; // ETH pending for address
 
@@ -123,15 +126,9 @@ contract KittyCoinClub is Ownable {
     | |  | | (_) | (_| | | | | |  __/ |  \__ \
     |_|  |_|\___/ \__,_|_|_| |_|\___|_|  |___/
     */
-    /// @notice Throws if called by any account other then the owner of the trust being modified
-    modifier onlyTrustOwner(uint _trustId) {
-        require(trustAddressLookup[_trustId] == msg.sender);
-        _;
-    }
-
     /// @notice Throws if called by any account that is a not a trust
     modifier onlyTrust() {
-        require(trustIdLookup[msg.sender] != 0);
+        require(trusted[msg.sender]);
         _;
     }
 
@@ -176,8 +173,9 @@ contract KittyCoinClub is Ownable {
             __/ | __/ |          __/ |                                                 
             |___/ |___/          |___/                                                  
     */
-    /// @notice Retrieves an array containing all KittyCoin's owned by an address. This function makes use of contract memory while it populates the array of results.
-    /// @param _owner The address of the owner to find kittycoins for
+    /// @notice Retrieves KittyCoins owned by an address.
+    /// @param _owner The address of the owner to find KittyCoins for
+    /// @return an array containing KittyCoins
     function getKittyCoinsByOwner(address _owner) external view returns(uint[]) {
         uint[] memory result = new uint[](ownerKittyCoinCount[_owner]);
         uint counter = 0;
@@ -190,6 +188,8 @@ contract KittyCoinClub is Ownable {
         return result;
     }
 
+    /// @notice Retrieves an array containing all Donations.
+    /// @return an array of donations
     function getDonators() external view returns(uint[]) {
         uint[] memory result = new uint[](donations.length);
         uint counter = 0;
@@ -213,18 +213,14 @@ contract KittyCoinClub is Ownable {
     uint coinDigits = 16;
     uint coinSeedModulus = 10 ** coinDigits;
 
-    /// @notice generate the KittyCoin's safely
+    /// @notice generate the KittyCoins safely
     /// @param _kittyId identifier of the kitty who recieved the donation for this coin
     /// @param _donationId donation identifier that is linked to this coin
     /// @param _seed the generated seed
     function _createKittyCoin(uint _kittyId, uint _donationId, uint _seed) internal {
-        // 'id' is the index of the kittycoin in the array of kittycoins
         uint id = kittyCoins.push(KittyCoin(_kittyId, _donationId, _seed)) - 1;
-        // assign the owner of the kittycoin to the sender
         kittyCoinToOwner[id] = msg.sender;
-        // increment the total number of kittcoins owned for the sender
         ownerKittyCoinCount[msg.sender]++;
-        // Send an event alerting the KittyCoins creation
         NewKittyCoin(id, _kittyId, _donationId, _seed);
     }
 
@@ -272,18 +268,18 @@ contract KittyCoinClub is Ownable {
         address _trustAddress, 
         address _fosterAddress) internal
         {
+            
         //TODO Execute the transaction
-        // 'id' is the index of the donation in the array of donations
         uint id = donations.push(
             Donation(_kittyId, _trustAddress, _fosterAddress, _trustAmount, _fosterAmount)
             ) - 1;
-        // Reference the donation to the sender
+
         donationToDonator[id] = msg.sender;
-        // increment the total number of kittcoins owned for the sender
         donatorDonationCount[msg.sender]++;
+
         // Safe Maths sum total
         uint256 totalAmount = SafeMath.add(_trustAmount, _fosterAmount);
-        // Return an event for the newly created donation
+
         NewDonation(id, _kittyId, totalAmount);
     }
 
@@ -334,6 +330,10 @@ contract KittyCoinClub is Ownable {
         return result;
     }
 
+    //TODO Work out if returning a Struct in a public view is legal in solidity
+    /// @notice Gets a donation object based on its id
+    /// @param _donationId The ID of the donation
+    /// @return Donation item
     function getDonation(uint _donationId) public view returns(Donation) {
         return donations[_donationId];
     }
@@ -365,15 +365,13 @@ contract KittyCoinClub is Ownable {
         uint _donationCap
         ) internal
         {   
-        // 'id' is the index of the kitty in the array of kitties
+            
         uint id = kitties.push(
             Kitty(_enabled, _trustAddr, _fosterAddr, _traitSeed, _donationCap)
             ) - 1;
-        // Reference the donation to the sender
+
         kittyToTrust[id] = msg.sender;
-        // increment the total number of kittcoins owned for the sender
         trustKittyCount[msg.sender]++;
-        // Return an event for the newly created kitty
         NewKitty(id, _traitSeed);
     }
 
@@ -397,13 +395,9 @@ contract KittyCoinClub is Ownable {
     /// @param _enabled Is the trust enabled
     /// @param _trustAddr The address to link this trust to
     function _createTrust(bool _enabled, address _trustAddr) internal {
-        // 'id' is the index of the trust in the array of trusts
         uint id = trusts.push(Trust(_enabled, _trustAddr)) - 1;
-        // Map both the address to the trust
-        // and the trust to the address
-        trustAddressLookup[id] = _trustAddr;
-        trustIdLookup[_trustAddr] = id;
-        // Send an event alerting the Trusts creation
+        trustIdToAddress[id] = _trustAddr;
+        trusted[_trustAddr] = _enabled;
         NewTrust(id);
     }
 
@@ -420,23 +414,22 @@ contract KittyCoinClub is Ownable {
         trusts[_id].trustEnabled = _enabled;
     }
 
-    /// @dev Allows a trust to change their address
-    /// @param _id The id of the trust where the address wants to be altered; the msg.sender must match the address in the id being changed
+    /// @notice Allows a trust to change their address
     /// @param _newTrustAddr The new trust address to be set
-    function changeTrustAddress(uint _id, address _newTrustAddr) onlyTrustOwner(_id) public {
+    function changeTrustAddress(uint _id, address _newTrustAddr) onlyTrust public {
+        require(trusts[_id].trustAddress == msg.sender);
         trusts[_id].trustAddress = _newTrustAddr;
-        trustAddressLookup[_id] = _newTrustAddr;
+        trustIdToAddress[_id] = _newTrustAddr;
+        //TODO replace this logic with something better
+        trusted[_newTrustAddr] = true;
+        trusted[msg.sender] = false;
         ChangedTrustAddress(_id, _newTrustAddr);
     }
 
-    /// @dev Checks if a given address belongs to a trust
+    /// @notice Checks if a given address belongs to a trust
     /// @param _address is the address that needs to be checked
     /// @return a boolean defining if a given address belongs to a trust
     function isTrustAddress(address _address) public view returns (bool) {
-        if (trustIdLookup[_address] != 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return trusted[_address];
     }
 }
