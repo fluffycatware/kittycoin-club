@@ -48,20 +48,19 @@ var App = {
   },
 
   bindEvents () {
-    //$(document).on('click', '.btn-donate', App.handleDonation);
-    $(document).on('submit', App.handleDonation);
+    $(document).on('submit', 'form.donate-kitty', App.handleDonation);
   },
 
-  markDonatedTo(donators, account) {
+  markDonatedTo(donations, account) {
     let kittyCoinClubInstance;
 
     App.contracts.KittyCoinClub.deployed().then((instance) => {
       kittyCoinClubInstance = instance;
 
-      return kittyCoinClubInstance.getDonators.call();
-    }).then((donators) => {
-      for (var i = 0; i < donators.length; i++) {
-        if (donators[i] !== '0x0000000000000000000000000000000000000000') {
+      return kittyCoinClubInstance.getDonations.call();
+    }).then((donations) => {
+      for (var i = 0; i < donations.length; i++) {
+        if (donations[i] !== '0x0000000000000000000000000000000000000000') {
           $('.card-kitty').eq(i).find('button').text('Success').attr('disabled', true);
         }
       }
@@ -91,8 +90,10 @@ var App = {
         kittyCoinClubInstance = instance;
 
         // Execute donate as a transaction by sending account
-        return kittyCoinClubInstance.makeDonation(kittyId, donationAmount, donationRatio, {
+        var price = web3.toWei(donationAmount, "ether");
+        return kittyCoinClubInstance.makeDonation(kittyId, price, donationRatio, {
           from: account,
+          value: price,
         });
       }).then(result => App.markDonatedTo()).catch((err) => {
         console.log(err.message);

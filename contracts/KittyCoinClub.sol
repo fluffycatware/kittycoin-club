@@ -190,7 +190,7 @@ contract KittyCoinClub is Ownable {
 
     /// @notice Retrieves an array containing all Donations.
     /// @return an array of donations
-    function getDonators() external view returns(uint[]) {
+    function getDonations() external view returns(uint[]) {
         uint[] memory result = new uint[](donations.length);
         uint counter = 0;
         for (uint i = 0; i < donations.length; i++) {
