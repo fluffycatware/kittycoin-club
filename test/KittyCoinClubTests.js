@@ -11,6 +11,7 @@ contract('KittyCoinClub', function (accounts) {
   const trust1 = accounts[1];
   const trust2 = accounts[2];
   const foster1 = accounts[3];
+  const donator1 = accounts[4];
 
   beforeEach(async function () {
     kittycoinclub = await KittyCoinClub.new();
@@ -75,6 +76,14 @@ contract('KittyCoinClub', function (accounts) {
     // Check that trust2 IS a trust
     const finalResultTrust2 = await kittycoinclub.isTrustAddress(trust2);
     assert.equal(finalResultTrust2, true);
+
+    // Toggle the new trust off using owner function
+    await kittycoinclub.toggleTrust(0, false, {
+      from: owner,
+    });
+    // Check that trust2 IS a trust
+    const toggledResultTrust2 = await kittycoinclub.isTrustAddress(trust2);
+    assert.equal(toggledResultTrust2, false);
   });
 
   it('trust should be allowed to create a kitty', async function () {
@@ -92,6 +101,34 @@ contract('KittyCoinClub', function (accounts) {
       from: trust1,
     }).then(function (result) {
       assert.include(result.logs[0].event, 'NewKitty', 'NewKitty event was not triggered');
+    });
+  });
+
+  it('should be able to make donations to a kitty', async function () {
+    // Turn trust1 address into a trust
+    await kittycoinclub.createTrust(trust1, {
+      from: owner,
+    }).then(function (result) {
+      assert.include(result.logs[0].event, 'NewTrust', 'NewTrust event was not triggered');
+    });
+
+    // Make put up a kitty for donation
+    var price = web3.toWei(3, 'ether');
+    var seed = '0x00f9e605e3';
+    await kittycoinclub.createKitty(foster1, seed, price, {
+      from: trust1,
+    }).then(function (result) {
+      assert.include(result.logs[0].event, 'NewKitty', 'NewKitty event was not triggered');
+    });
+
+    // donator1 makes a donation to a new kitty
+    var amount = web3.toWei(1, 'ether');
+    var ratio = 50;
+    await kittycoinclub.makeDonation(0, amount, ratio, {
+      from: donator1,
+      value: amount,
+    }).then(function (result) {
+      assert.include(result.logs[0].event, 'NewDonation', 'NewDonation event was not triggered');
     });
   });
 });

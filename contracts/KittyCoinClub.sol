@@ -289,7 +289,7 @@ contract KittyCoinClub is Ownable {
     /// @param _ratio The percentage that should go to the foster carer
     function makeDonation(uint _kittyId, uint _amount, uint _ratio) payable public {
         require(msg.value > 0);
-        require(msg.value > _amount);
+        require(msg.value >= _amount);
         require(_ratio <= 100 && _ratio >= 0);
         require(kitties[_kittyId].donationsEnabled);
 
@@ -412,6 +412,7 @@ contract KittyCoinClub is Ownable {
     /// @param _enabled A boolean true or false, where true is to enable and false is to disable the trust
     function toggleTrust(uint _id, bool _enabled) onlyOwner public {
         trusts[_id].trustEnabled = _enabled;
+        trusted[trusts[_id].trustAddress] = _enabled;
     }
 
     /// @notice Allows a trust to change their address
