@@ -290,45 +290,6 @@
     <script src="js/lib/web3.min.js"></script>
     <script src="js/lib/truffle-contract.min.js"></script>
     <script src="js/app.js"></script>
-    <script src="js/trusts.js"></script>
-
-    <script>
-        randomKitty();
-
-        function randomKitty() {
-            generateKittyCoinImage(generateRandomCoinImageHex(), 10);
-        }
-
-        function generateRandomCoinImageHex() {
-            var output_string = "0x00" +
-                Math.floor(Math.random() * 255).toString(16) +
-                Math.floor(Math.random() * 255).toString(16) +
-                Math.floor(Math.random() * 255).toString(16) +
-                Math.floor(Math.random() * 255).toString(16);
-            $('#randKittyId').val(output_string);
-            return output_string;
-        }
-
-        function generateKittyCoinImage(catId, size) {
-            size = size || 10;
-            var data = kittycoinparser(catId);
-            var canvas = document.getElementById('kitty-canvas');
-            canvas.width = size * data.length;
-            canvas.height = size * data[1].length;
-            var ctx = canvas.getContext('2d');
-
-            for (var i = 0; i < data.length; i++) {
-                for (var j = 0; j < data[i].length; j++) {
-                    var color = data[i][j];
-                    if (color) {
-                        ctx.fillStyle = color;
-                        ctx.fillRect(i * size, j * size, size, size);
-                    }
-                }
-            }
-            return canvas.toDataURL();
-        }
-    </script>
 </body>
 
 </html>

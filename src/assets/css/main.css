@@ -135,6 +135,18 @@ hr {
     color: #636c72;
 }
 
+.form-control::-moz-placeholder {
+    color: rgb(177, 177, 177);
+}
+
+.form-control:-ms-input-placeholder {
+    color: rgb(177, 177, 177);
+}
+
+.form-control::-webkit-input-placeholder {
+    color: rgb(177, 177, 177);
+}
+
 .input-group-addon {
     color: #636c72;
 }
@@ -247,6 +259,7 @@ i {
 }
 
 /* Round */
+
 .ribbon.round h4 {
     border-radius: 4px;
 }

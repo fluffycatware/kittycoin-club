@@ -1,22 +1,77 @@
+/** Updates the trust address field with the users address. */
+function populateUserData () {
+  if (typeof web3 !== 'undefined') {
+    var account = web3.eth.defaultAccount;
+    if (account) {
+      $('#inputTrustAddress').val(account);
+    }
+  }
+}
+
+/** Generates a random kitty for the display canvas */
+function randomKitty() {
+  generateKittyCoinImage(generateRandomCoinImageHex(), 10);
+}
+
+/** Randomizes a 5byte hex value for the kitty generation */
+function generateRandomCoinImageHex() {
+  var output_string = "0x00" +
+    Math.floor(Math.random() * 255).toString(16) +
+    Math.floor(Math.random() * 255).toString(16) +
+    Math.floor(Math.random() * 255).toString(16) +
+    Math.floor(Math.random() * 255).toString(16);
+  $('#randKittyId').val(output_string);
+  return output_string;
+}
+
+/**
+ * Using the random 5 byte hex value, this generates and 
+ * displays the kitty image.
+ * @param {string} catId - Id of the kitty to display.
+ * @param {int} size - Scale size of the kitty image.
+ */
+function generateKittyCoinImage(catId, size) {
+  size = size || 10;
+  var data = kittycoinparser(catId);
+  var canvas = document.getElementById('kitty-canvas');
+  canvas.width = size * data.length;
+  canvas.height = size * data[1].length;
+  var ctx = canvas.getContext('2d');
+
+  for (var i = 0; i < data.length; i++) {
+    for (var j = 0; j < data[i].length; j++) {
+      var color = data[i][j];
+      if (color) {
+        ctx.fillStyle = color;
+        ctx.fillRect(i * size, j * size, size, size);
+      }
+    }
+  }
+  return canvas.toDataURL();
+}
+
+/** Using the json definitions, load in sample kitties */
+function loadKittiesFromJson() {
+  $.getJSON('../kitties.json', (data) => {
+    const kittyRow = $('#kitty-row');
+    const kittyTemplate = $('#kitty-template');
+
+    for (var i = 0; i < data.length; i++) {
+      kittyTemplate.find('.card-title').text(data[i].name);
+      kittyTemplate.find('.card-img-top').attr('src', data[i].picture);
+      kittyTemplate.find('.card-text').text(data[i].description);
+      kittyTemplate.find('.btn-donate').attr('data-id', data[i].id);
+
+      kittyRow.append(kittyTemplate.html());
+    }
+  });
+}
+
 var App = {
   contracts: {},
 
   init() {
-    // Load kitties.
-    $.getJSON('../kitties.json', (data) => {
-      const kittyRow = $('#kitty-row');
-      const kittyTemplate = $('#kitty-template');
-
-      for (var i = 0; i < data.length; i++) {
-        kittyTemplate.find('.card-title').text(data[i].name);
-        kittyTemplate.find('.card-img-top').attr('src', data[i].picture);
-        kittyTemplate.find('.card-text').text(data[i].description);
-        kittyTemplate.find('.btn-donate').attr('data-id', data[i].id);
-
-        kittyRow.append(kittyTemplate.html());
-      }
-    });
-
+    loadKittiesFromJson();
     return App.initWeb3();
   },
 
@@ -27,7 +82,6 @@ var App = {
       // set the provider you want from Web3.providers
       web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
     }
-
     return App.initContract();
   },
 
@@ -43,12 +97,12 @@ var App = {
       // User our contract to retrieve the kitties with donations
       return App.markDonatedTo();
     });
-
     return App.bindEvents();
   },
 
-  bindEvents () {
+  bindEvents() {
     $(document).on('submit', 'form.donate-kitty', App.handleDonation);
+    $(document).on('submit', 'form.create-kitty', App.createKitty);
   },
 
   markDonatedTo(donations, account) {
@@ -101,10 +155,24 @@ var App = {
     });
   },
 
+  createKitty (event) {
+    event.preventDefault();
+  
+    // Get the form fields
+    var kittyName = $(event.target.elements)[0].value;
+    var kittyId = $(event.target.elements)[1].value;
+    var trustAddress = $(event.target.elements)[2].value;
+    var fosterAddress = $(event.target.elements)[3].value;
+    var donationCap = parseFloat($(event.target.elements)[4].value);
+  
+    console.log(kittyName, kittyId, trustAddress, fosterAddress, donationCap);
+  }
 };
 
 jQuery(document).ready(
   function ($) {
     App.init();
+    populateUserData();
+    randomKitty();
   }
 );
