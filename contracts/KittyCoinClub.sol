@@ -200,6 +200,18 @@ contract KittyCoinClub is Ownable {
         return result;
     }
 
+    /// @notice Retrieves an array containing all Kitties up for donation.
+    /// @return an array of kitties that are up for donation
+    function getKitties() external view returns(uint[]) {
+        uint[] memory result = new uint[](kitties.length);
+        uint counter = 0;
+        for (uint i = 0; i < kitties.length; i++) {
+            result[counter] = i;
+            counter++;
+        }
+        return result;
+    }
+
     /*
      _  ___ _   _          _____      _       
     | |/ (_) | | |        / ____|    (_)      

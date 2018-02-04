@@ -94,18 +94,31 @@ var App = {
       // Set the provider for our contract
       App.contracts.KittyCoinClub.setProvider(web3.currentProvider);
 
-      // User our contract to retrieve the kitties with donations
-      return App.markDonatedTo();
+      // User our contract to retrieve the kitties that can be donated to
+      return App.loadKitties();
     });
     return App.bindEvents();
   },
 
-  bindEvents() {
-    $(document).on('submit', 'form.donate-kitty', App.handleDonation);
-    $(document).on('submit', 'form.create-kitty', App.createKitty);
+  loadKitties() {
+    let kittyCoinClubInstance;
+
+    App.contracts.KittyCoinClub.deployed().then((instance) => {
+      kittyCoinClubInstance = instance;
+
+      return kittyCoinClubInstance.getKitties.call();
+    }).then((kitties) => {
+      for (var i = 0; i < kitties.length; i++) {
+        if (kitties[i] !== '0x0000000000000000000000000000000000000000') {
+          console.log(kitties[i]);
+        }
+      }
+    }).catch((err) => {
+      console.log(err.message);
+    });
   },
 
-  markDonatedTo(donations, account) {
+  loadDonations() {
     let kittyCoinClubInstance;
 
     App.contracts.KittyCoinClub.deployed().then((instance) => {
@@ -115,12 +128,19 @@ var App = {
     }).then((donations) => {
       for (var i = 0; i < donations.length; i++) {
         if (donations[i] !== '0x0000000000000000000000000000000000000000') {
-          $('.card-kitty').eq(i).find('button').text('Success').attr('disabled', true);
+          console.log(donations[i]);
         }
       }
     }).catch((err) => {
       console.log(err.message);
     });
+  },
+
+  /** Event Bindings for Form submits */
+  bindEvents() {
+    $(document).on('submit', 'form.donate-kitty', App.handleDonation);
+    $(document).on('submit', 'form.create-kitty', App.handleCreateKitty);
+    $(document).on('submit', 'form.create-trust', App.handleCreateTrust);
   },
 
   handleDonation(event) {
@@ -149,13 +169,13 @@ var App = {
           from: account,
           value: price,
         });
-      }).then(result => App.markDonatedTo()).catch((err) => {
+      }).then(result => App.loadDonations()).catch((err) => {
         console.log(err.message);
       });
     });
   },
 
-  createKitty (event) {
+  handleCreateKitty (event) {
     event.preventDefault();
   
     // Get the form fields
@@ -164,8 +184,56 @@ var App = {
     var trustAddress = $(event.target.elements)[2].value;
     var fosterAddress = $(event.target.elements)[3].value;
     var donationCap = parseFloat($(event.target.elements)[4].value);
+
+    var kittyCoinClubInstance;
+
+    web3.eth.getAccounts((error, accounts) => {
+      if (error) {
+        console.log(error);
+      }
+
+      var account = accounts[0];
+
+      App.contracts.KittyCoinClub.deployed().then((instance) => {
+        kittyCoinClubInstance = instance;
+
+        // Execute create kitty function
+        var donateCap = web3.toWei(donationCap, "ether");
+        return kittyCoinClubInstance.createKitty(fosterAddress, kittyId, donationCap, {
+          from: account,
+        });
+      }).then(result => App.loadKitties()).catch((err) => {
+        console.log(err.message);
+      });
+    });
+  },
+
+  handleCreateTrust (event) {
+    event.preventDefault();
   
-    console.log(kittyName, kittyId, trustAddress, fosterAddress, donationCap);
+    // Get the form fields
+    var trustAddress = $(event.target.elements)[0].value;
+
+    var kittyCoinClubInstance;
+
+    web3.eth.getAccounts((error, accounts) => {
+      if (error) {
+        console.log(error);
+      }
+
+      var account = accounts[0];
+
+      App.contracts.KittyCoinClub.deployed().then((instance) => {
+        kittyCoinClubInstance = instance;
+
+        // Execute create trust function
+        return kittyCoinClubInstance.createTrust(trustAddress, {
+          from: account,
+        });
+      }).then().catch((err) => {
+        console.log(err.message);
+      });
+    });
   }
 };
 
