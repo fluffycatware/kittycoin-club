@@ -81,6 +81,7 @@ contract('KittyCoinClub', function (accounts) {
     await kittycoinclub.toggleTrust(0, false, {
       from: owner,
     });
+
     // Check that trust2 IS a trust
     const toggledResultTrust2 = await kittycoinclub.isTrustAddress(trust2);
     assert.equal(toggledResultTrust2, false);
@@ -121,14 +122,18 @@ contract('KittyCoinClub', function (accounts) {
       assert.include(result.logs[0].event, 'NewKitty', 'NewKitty event was not triggered');
     });
 
-    // donator1 makes a donation to a new kitty
-    var amount = web3.toWei(1, 'ether');
-    var ratio = 50;
-    await kittycoinclub.makeDonation(0, amount, ratio, {
-      from: donator1,
-      value: amount,
-    }).then(function (result) {
-      assert.include(result.logs[0].event, 'NewDonation', 'NewDonation event was not triggered');
-    });
+    // donator1 makes a series of donations to a new kitty
+    for (let i = 0.1; i < 1; i = i + 0.1) {
+      var amount = web3.toWei(i, 'ether');
+      for (let j = 0; j < 100; j = j + 10) {
+        var ratio = j;
+        await kittycoinclub.makeDonation(0, ratio, {
+          from: donator1,
+          value: amount,
+        }).then(function (result) {
+          assert.include(result.logs[0].event, 'NewDonation', 'NewDonation event was not triggered');
+        });
+      }
+    }
   });
 });

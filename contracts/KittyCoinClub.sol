@@ -280,11 +280,14 @@ contract KittyCoinClub is Ownable {
         address _trustAddress, 
         address _fosterAddress) internal
         {
-            
-        //TODO Execute the transaction
+
         uint id = donations.push(
             Donation(_kittyId, _trustAddress, _fosterAddress, _trustAmount, _fosterAmount)
             ) - 1;
+
+        // Complete the transaction
+        pendingWithdrawals[_trustAddress] = _trustAmount;
+        pendingWithdrawals[_fosterAddress] = _fosterAmount;
 
         donationToDonator[id] = msg.sender;
         donatorDonationCount[msg.sender]++;
@@ -297,17 +300,15 @@ contract KittyCoinClub is Ownable {
 
     /// @notice Performs a donation, computing the ratio of the funds that should go to the trust and the foster carer. If the foster carer has reached their limit for donations when the amount goes to the trust.
     /// @param _kittyId The id of the kitty being donated to
-    /// @param _amount The total amount being donated
     /// @param _ratio The percentage that should go to the foster carer
-    function makeDonation(uint _kittyId, uint _amount, uint _ratio) payable public {
+    function makeDonation(uint _kittyId, uint _ratio) payable public {
         require(msg.value > 0);
-        require(msg.value >= _amount);
         require(_ratio <= 100 && _ratio >= 0);
         require(kitties[_kittyId].donationsEnabled);
 
         // Safe Maths ratio of donation
-        uint256 donationTotal = _amount;
-        uint256 fosterAmount = SafeMath.mul(_amount, SafeMath.div(_ratio, 100));
+        uint256 donationTotal = msg.value;
+        uint256 fosterAmount = SafeMath.mul(donationTotal, SafeMath.div(_ratio, 100));
         uint256 fosterOverflow;
         if (fosterAmount > kitties[_kittyId].donationCap) {
             fosterOverflow = SafeMath.sub(fosterAmount, kitties[_kittyId].donationCap);
@@ -315,7 +316,7 @@ contract KittyCoinClub is Ownable {
         }
         uint256 trustAmount = SafeMath.sub(donationTotal, SafeMath.add(fosterAmount, fosterOverflow));
         // Validate the maths worked correctly
-        assert(_amount == (trustAmount + fosterAmount));
+        assert(msg.value == SafeMath.add(trustAmount, fosterAmount));
 
         // Make the donation
         _donate(
