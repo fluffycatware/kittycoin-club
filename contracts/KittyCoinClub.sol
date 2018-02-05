@@ -113,7 +113,7 @@ contract KittyCoinClub is Ownable {
     |______\_/ \___|_| |_|\__|___/
     */
     event NewKittyCoin(uint kittyCoinId, uint kittyId, uint donationId, uint coinSeed);
-    event NewDonation(uint donationId, uint kittyId, uint donationAmount);
+    event NewDonation(uint donationId, uint kittyId, uint trustAmount, uint fosterAmount, uint totalDonationAmount);
     event NewKitty(uint kittyId, uint traitsId);
     event NewTrust(uint trustId);
     event ChangedTrustAddress(uint trustId, address trustAddr);
@@ -295,7 +295,7 @@ contract KittyCoinClub is Ownable {
         // Safe Maths sum total
         uint256 totalAmount = SafeMath.add(_trustAmount, _fosterAmount);
 
-        NewDonation(id, _kittyId, totalAmount);
+        NewDonation(id, _kittyId, _trustAmount, _fosterAmount, totalAmount);
     }
 
     /// @notice Performs a donation, computing the ratio of the funds that should go to the trust and the foster carer. If the foster carer has reached their limit for donations when the amount goes to the trust.
@@ -303,11 +303,11 @@ contract KittyCoinClub is Ownable {
     /// @param _ratio The percentage that should go to the foster carer
     function makeDonation(uint _kittyId, uint _ratio) payable public {
         require(msg.value > 0);
-        require(_ratio <= 100 && _ratio >= 0);
+        require(_ratio <= 100 && _ratio >= 0); // example ratio 50
         require(kitties[_kittyId].donationsEnabled);
 
         // Safe Maths ratio of donation
-        uint256 donationTotal = msg.value;
+        uint256 donationTotal = msg.value; // 3 eth in
         uint256 fosterAmount = SafeMath.mul(donationTotal, SafeMath.div(_ratio, 100));
         uint256 fosterOverflow;
         if (fosterAmount > kitties[_kittyId].donationCap) {

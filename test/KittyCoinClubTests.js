@@ -124,13 +124,30 @@ contract('KittyCoinClub', function (accounts) {
 
     // donator1 makes a series of donations to a new kitty
     for (let i = 0.1; i < 1; i = i + 0.1) {
-      var amount = web3.toWei(i, 'ether');
       for (let j = 0; j < 100; j = j + 10) {
+        var amount = web3.toWei(i, 'ether');
         var ratio = j;
         await kittycoinclub.makeDonation(0, ratio, {
           from: donator1,
           value: amount,
         }).then(function (result) {
+          const logs = result.logs[0].args;
+          const trustAmount = logs.trustAmount;
+          const donationId = logs.donationId;
+          const kittyId = logs.kittyId;
+          const fosterAmount = logs.fosterAmount;
+          const totalDonationAmount = logs.totalDonationAmount;
+          console.log(
+            'amount: ' + amount +
+            '\tratio: ' + ratio +
+            '\tdonationId: ' + donationId +
+            '\tkittyId: ' + kittyId +
+            '\ttrustAmount: ' + trustAmount +
+            '\tfosterAmount: ' + fosterAmount +
+            '\ttotalDonationAmount: ' + totalDonationAmount
+          );
+          // Assert that the total donated amount equals the amount processed by the contract
+          assert(web3.fromWei(logs.totalDonationAmount, 'ether'), i);
           assert.include(result.logs[0].event, 'NewDonation', 'NewDonation event was not triggered');
         });
       }
