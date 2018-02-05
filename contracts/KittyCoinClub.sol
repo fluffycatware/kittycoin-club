@@ -303,11 +303,11 @@ contract KittyCoinClub is Ownable {
     /// @param _ratio The percentage that should go to the foster carer
     function makeDonation(uint _kittyId, uint _ratio) payable public {
         require(msg.value > 0);
-        require(_ratio <= 100 && _ratio >= 0); // example ratio 50
+        require(_ratio <= 100 && _ratio >= 0);
         require(kitties[_kittyId].donationsEnabled);
 
         // Safe Maths ratio of donation
-        uint256 donationTotal = msg.value; // 3 eth in
+        uint256 donationTotal = msg.value;
         uint256 fosterAmount = SafeMath.mul(donationTotal, SafeMath.div(_ratio, 100));
         uint256 fosterOverflow;
         if (fosterAmount > kitties[_kittyId].donationCap) {
