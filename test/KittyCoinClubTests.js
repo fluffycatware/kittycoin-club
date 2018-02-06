@@ -1,4 +1,5 @@
 /* eslint no-undef: "off" */
+var BigNumber = require('bignumber.js');
 const KittyCoinClub = artifacts.require('KittyCoinClub');
 
 contract('KittyCoinClub', function (accounts) {
@@ -123,13 +124,18 @@ contract('KittyCoinClub', function (accounts) {
     });
 
     // donator1 makes a series of donations to a new kitty
-    for (let i = 0.1; i < 1; i = i + 0.1) {
-      for (let j = 0; j < 100; j = j + 10) {
-        var amount = web3.toWei(i, 'ether');
-        var ratio = j;
-        await kittycoinclub.makeDonation(0, ratio, {
+    for (let amount = 0.1; amount < 1.4; amount = amount + 0.4) {
+      for (let ratio = 0; ratio <= 100; ratio = ratio + 50) {
+        var foster = new BigNumber(amount).times(ratio).dividedBy(100);
+        var trust = new BigNumber(amount).minus(foster);
+
+        var totalAmount = web3.toWei(amount, 'ether');
+        var fosterAmount = web3.toWei(foster.toNumber(), 'ether');
+        var trustAmount = web3.toWei(trust.toNumber(), 'ether');
+
+        await kittycoinclub.makeDonation(0, trustAmount, fosterAmount, {
           from: donator1,
-          value: amount,
+          value: totalAmount,
         }).then(function (result) {
           const logs = result.logs[0].args;
           const trustAmount = logs.trustAmount;
@@ -138,7 +144,7 @@ contract('KittyCoinClub', function (accounts) {
           const fosterAmount = logs.fosterAmount;
           const totalDonationAmount = logs.totalDonationAmount;
           console.log(
-            'amount: ' + amount +
+            '\tamount: ' + amount +
             '\tratio: ' + ratio +
             '\tdonationId: ' + donationId +
             '\tkittyId: ' + kittyId +
@@ -147,7 +153,7 @@ contract('KittyCoinClub', function (accounts) {
             '\ttotalDonationAmount: ' + totalDonationAmount
           );
           // Assert that the total donated amount equals the amount processed by the contract
-          assert(web3.fromWei(logs.totalDonationAmount, 'ether'), i);
+          assert(web3.fromWei(logs.totalDonationAmount, 'ether'), amount);
           assert.include(result.logs[0].event, 'NewDonation', 'NewDonation event was not triggered');
         });
       }

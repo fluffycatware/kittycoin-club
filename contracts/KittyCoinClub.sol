@@ -298,23 +298,24 @@ contract KittyCoinClub is Ownable {
         NewDonation(id, _kittyId, _trustAmount, _fosterAmount, totalAmount);
     }
 
-    /// @notice Performs a donation, computing the ratio of the funds that should go to the trust and the foster carer. If the foster carer has reached their limit for donations when the amount goes to the trust.
+    /// @notice Performs a donation, If the foster carer has reached their limit for donations when the amount goes to the trust.
     /// @param _kittyId The id of the kitty being donated to
-    /// @param _ratio The percentage that should go to the foster carer
-    function makeDonation(uint _kittyId, uint _ratio) payable public {
+    /// @param _trustAmount Amount that should go to the trust
+    /// @param _fosterAmount Amount that should go to the foster carer
+    function makeDonation(uint _kittyId, uint _trustAmount, uint _fosterAmount) payable public {
         require(msg.value > 0);
-        require(_ratio <= 100 && _ratio >= 0);
         require(kitties[_kittyId].donationsEnabled);
+        require(SafeMath.add(_trustAmount, _fosterAmount) == msg.value);
 
-        // Safe Maths ratio of donation
+        // Safe Maths donation
         uint256 donationTotal = msg.value;
-        uint256 fosterAmount = SafeMath.mul(donationTotal, SafeMath.div(_ratio, 100));
         uint256 fosterOverflow;
-        if (fosterAmount > kitties[_kittyId].donationCap) {
-            fosterOverflow = SafeMath.sub(fosterAmount, kitties[_kittyId].donationCap);
-            fosterAmount = SafeMath.sub(fosterAmount, fosterOverflow);
+        uint256 fosterAmount = _fosterAmount;
+        if (_fosterAmount >= kitties[_kittyId].donationCap) { // cap = 3 // amount = 3.5
+            fosterOverflow = SafeMath.sub(_fosterAmount, kitties[_kittyId].donationCap); // overflow = 3.5 - 3 = 0.5
+            fosterAmount = SafeMath.sub(_fosterAmount, fosterOverflow); // 3.5 - 0.5 = 3.0
         }
-        uint256 trustAmount = SafeMath.sub(donationTotal, SafeMath.add(fosterAmount, fosterOverflow));
+        uint256 trustAmount = SafeMath.sub(donationTotal, SafeMath.add(fosterAmount, fosterOverflow)); // 4 - (3.0 + 0.5) = 0.5
         // Validate the maths worked correctly
         assert(msg.value == SafeMath.add(trustAmount, fosterAmount));
 
