@@ -91,13 +91,13 @@ contract KittyCoinClub is Ownable {
                 |_|   |_|            |___/     
     */
     mapping (uint => address) public kittyCoinToOwner;
-    mapping (address => uint) ownerKittyCoinCount;
+    mapping (address => uint) public kittyCoinCount;
 
     mapping (uint => address) public donationToDonator;
-    mapping (address => uint) donatorDonationCount;
+    mapping (address => uint) public donationCount;
 
     mapping (uint => address) public kittyToTrust;
-    mapping (address => uint) trustKittyCount;
+    mapping (address => uint) public kittyCount;
 
     mapping (uint => address) public trustIdToAddress;
     mapping (address => bool) public trusted;
@@ -129,6 +129,11 @@ contract KittyCoinClub is Ownable {
     /// @notice Throws if called by any account that is a not a trust
     modifier onlyTrust() {
         require(trusted[msg.sender]);
+        _;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner);
         _;
     }
 
@@ -177,7 +182,7 @@ contract KittyCoinClub is Ownable {
     /// @param _owner The address of the owner to find KittyCoins for
     /// @return an array containing KittyCoins
     function getKittyCoinsByOwner(address _owner) external view returns(uint[]) {
-        uint[] memory result = new uint[](ownerKittyCoinCount[_owner]);
+        uint[] memory result = new uint[](kittyCoinCount[_owner]);
         uint counter = 0;
         for (uint i = 0; i < kittyCoins.length; i++) {
             if (kittyCoinToOwner[i] == _owner) {
@@ -232,7 +237,7 @@ contract KittyCoinClub is Ownable {
     function _createKittyCoin(uint _kittyId, uint _donationId, uint _seed) internal {
         uint id = kittyCoins.push(KittyCoin(_kittyId, _donationId, _seed)) - 1;
         kittyCoinToOwner[id] = msg.sender;
-        ownerKittyCoinCount[msg.sender]++;
+        kittyCoinCount[msg.sender]++;
         NewKittyCoin(id, _kittyId, _donationId, _seed);
     }
 
@@ -249,7 +254,7 @@ contract KittyCoinClub is Ownable {
     /// @param _donationId donation to be used to generate the coin
     function createRandomKittyCoin(uint _donationId) public {
         // Confirm that the owner doesn't have any kittycoins
-        require(ownerKittyCoinCount[msg.sender] == 0);
+        require(kittyCoinCount[msg.sender] == 0);
         // Get the kitty information from the donation
         uint kittyId = getDonation(_donationId).kittyId;
         uint kittyTraitSeed = kitties[kittyId].kittyTraitSeed;
@@ -290,7 +295,7 @@ contract KittyCoinClub is Ownable {
         pendingWithdrawals[_fosterAddress] = _fosterAmount;
 
         donationToDonator[id] = msg.sender;
-        donatorDonationCount[msg.sender]++;
+        donationCount[msg.sender]++;
 
         // Safe Maths sum total
         uint256 totalAmount = SafeMath.add(_trustAmount, _fosterAmount);
@@ -333,7 +338,7 @@ contract KittyCoinClub is Ownable {
     /// @param _donator Donator address
     /// @return an array of donation identifiers
     function getDonationsByDonator(address _donator) external view returns(uint[]) {
-        uint[] memory result = new uint[](donatorDonationCount[_donator]);
+        uint[] memory result = new uint[](donationCount[_donator]);
         uint counter = 0;
         for (uint i = 0; i < donations.length; i++) {
             if (donationToDonator[i] == _donator) {
@@ -385,7 +390,7 @@ contract KittyCoinClub is Ownable {
             ) - 1;
 
         kittyToTrust[id] = msg.sender;
-        trustKittyCount[msg.sender]++;
+        kittyCount[msg.sender]++;
         NewKitty(id, _traitSeed);
     }
 

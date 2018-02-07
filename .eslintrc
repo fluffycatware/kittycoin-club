@@ -1,7 +1,6 @@
 {
     "extends" : [
-      "standard",
-      "plugin:promise/recommended"
+      "standard"
     ],
     "plugins": [
       "promise"
@@ -30,7 +29,7 @@
       "eqeqeq": [2, "smart"],
       "dot-notation": [2, {"allowKeywords": true, "allowPattern": ""}],
       "no-redeclare": [2, {"builtinGlobals": true}],
-      "no-trailing-spaces": [2, { "skipBlankLines": true }],
+      "no-trailing-spaces": [0, { "skipBlankLines": true }],
       "eol-last": 1,
       "comma-spacing": [2, {"before": false, "after": true}],
       "no-mixed-spaces-and-tabs": [2, "smart-tabs"],
@@ -42,8 +41,6 @@
       "object-curly-spacing": [2, "always"],
       "max-len": [2, 120, 2],
       "generator-star-spacing": ["error", "before"],
-      "promise/avoid-new": 0,
-      "promise/always-return": 0,
       "prefer-const": 1,
       "complexity": [ 1, 5 ],
       "consistent-return": 0,
