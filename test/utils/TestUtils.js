@@ -200,7 +200,7 @@ module.exports = function (KittyCoinClub, accounts) {
     if (fail) {
       it('should not make account[' + accountTo + '] a trust from account[' + accountFrom + ']', function (done) {
         KittyCoinClub.deployed().then(function (instance) {
-          instance.createTrust(accountTo, { from: accounts[accountFrom] }).catch(function (error) {
+          instance.createTrust(accounts[accountTo], { from: accounts[accountFrom] }).catch(function (error) {
             assert.equal(error.toString(), errorMessage, 'not the correct error message');
           }).then(done).catch(done);
         });
@@ -208,9 +208,59 @@ module.exports = function (KittyCoinClub, accounts) {
     } else {
       it('should make account[' + accountTo + '] a trust from account[' + accountFrom + ']', function (done) {
         KittyCoinClub.deployed().then(async function (instance) {
-          await instance.createTrust(accountTo, { from: accounts[accountFrom] })
+          await instance.createTrust(accounts[accountTo], { from: accounts[accountFrom] })
             .then(function (result) {
               assert.include(result.logs[0].event, 'NewTrust', 'NewTrust event was not triggered');
+            });
+        }).then(done).catch(done);
+      });
+    };
+  };
+
+  // checks that a given account is a trust
+  function checkAccountIsTrust (account, fail) {
+    if (fail) {
+      it('should verify account[' + account + '] is not a trust', function (done) {
+        KittyCoinClub.deployed().then(async function (instance) {
+          await instance.isTrustAddress(accounts[account])
+            .then(function (result) {
+              assert.equal(result, false, 'account[' + account + '] is a trust');
+            });
+        }).then(done).catch(done);
+      });
+    } else {
+      it('should verify account[' + account + '] is a trust', function (done) {
+        KittyCoinClub.deployed().then(async function (instance) {
+          await instance.isTrustAddress(accounts[account])
+            .then(function (result) {
+              assert.equal(result, true, 'account[' + account + '] is not a trust');
+            });
+        }).then(done).catch(done);
+      });
+    };
+  };
+
+  // checks that a given account is a trust
+  function checkChangeTrustAddress (trustId, accountTo, accountFrom, fail) {
+    if (fail) {
+      it('should verify trustId[' + trustId + '] is not transfered to account[' + accountTo + 
+      '] from account[' + accountFrom + ']', function (done) {
+        KittyCoinClub.deployed().then(function (instance) {
+          instance.changeTrustAddress(trustId, accounts[accountTo], { from: accounts[accountFrom] })
+            .catch(function (error) {
+              assert.equal(
+                error.toString(), errorMessage, 'not the correct error message');
+            }).then(done).catch(done);
+        });
+      });
+    } else {
+      it('should verify trustId[' + trustId + '] is transfered to account[' + accountTo + 
+      '] from account[' + accountFrom + ']', function (done) {
+        KittyCoinClub.deployed().then(async function (instance) {
+          await instance.changeTrustAddress(trustId, accounts[accountTo], { from: accounts[accountFrom] })
+            .then(function (result) {
+              assert.include(
+                result.logs[0].event, 'ChangedTrustAddress', 'ChangedTrustAddress event was not triggered');
             });
         }).then(done).catch(done);
       });
@@ -232,5 +282,7 @@ module.exports = function (KittyCoinClub, accounts) {
     checkWithdraw: checkWithdraw,
     /** Trust Manipulation */
     checkCanApplyTrustToAccount: checkCanApplyTrustToAccount,
+    checkAccountIsTrust: checkAccountIsTrust,
+    checkChangeTrustAddress: checkChangeTrustAddress,
   };
 };

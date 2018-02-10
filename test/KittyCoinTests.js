@@ -42,9 +42,30 @@ contract('KittyCoinClub', function (accounts) {
   // account[1] should not be able to give trust status to themselves
   checkCanApplyTrustToAccount(1, 1, 'expect to fail');
 
-  // account[0] should be able to give trust status to account[1]
+  // account[0] should be able to give trust[0] to account[1]
   checkCanApplyTrustToAccount(1, 0);
 
-  // account[0] should be able to give trust status to themselves
+  // account[0] should be able to give trust[1] to themselves
   checkCanApplyTrustToAccount(0, 0);
+
+  // account[0] should be a trust
+  checkAccountIsTrust(0);
+
+  // account[1] should be a trust
+  checkAccountIsTrust(1);
+
+  // account[3] should not be a trust
+  checkAccountIsTrust(3, 'expect to fail');
+
+  // account[1] should be able to give account[3] ownership of trust[0]
+  checkChangeTrustAddress(0, 3, 1);
+
+  // account[3] should be a trust
+  checkAccountIsTrust(3);
+
+  // account[1] should not be a trust
+  checkAccountIsTrust(1, 'expect to fail');
+
+  // account[1] should not be able to give account[2] ownership of trust[1]
+  checkChangeTrustAddress(1, 2, 1, 'expect to fail');
 });
