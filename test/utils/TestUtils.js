@@ -186,15 +186,7 @@ module.exports = function (KittyCoinClub, accounts) {
       ██║   ██╔══██╗██║   ██║╚════██║   ██║                                                        
       ██║   ██║  ██║╚██████╔╝███████║   ██║                                                        
       ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚══════╝   ╚═╝                                                        
-                                                                                                    
-    ███╗   ███╗ █████╗ ███╗   ██╗██╗██████╗ ██╗   ██╗██╗      █████╗ ████████╗██╗ ██████╗ ███╗   ██╗
-    ████╗ ████║██╔══██╗████╗  ██║██║██╔══██╗██║   ██║██║     ██╔══██╗╚══██╔══╝██║██╔═══██╗████╗  ██║
-    ██╔████╔██║███████║██╔██╗ ██║██║██████╔╝██║   ██║██║     ███████║   ██║   ██║██║   ██║██╔██╗ ██║
-    ██║╚██╔╝██║██╔══██║██║╚██╗██║██║██╔═══╝ ██║   ██║██║     ██╔══██║   ██║   ██║██║   ██║██║╚██╗██║
-    ██║ ╚═╝ ██║██║  ██║██║ ╚████║██║██║     ╚██████╔╝███████╗██║  ██║   ██║   ██║╚██████╔╝██║ ╚████║
-    ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝╚═╝      ╚═════╝ ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
   */
-
   // checks that we can apply trust status to an account
   function checkCanApplyTrustToAccount (accountTo, accountFrom, fail) {
     if (fail) {
@@ -267,8 +259,126 @@ module.exports = function (KittyCoinClub, accounts) {
     };
   };
 
+  /*
+  ██╗  ██╗██╗████████╗████████╗██╗   ██╗
+  ██║ ██╔╝██║╚══██╔══╝╚══██╔══╝╚██╗ ██╔╝
+  █████╔╝ ██║   ██║      ██║    ╚████╔╝ 
+  ██╔═██╗ ██║   ██║      ██║     ╚██╔╝  
+  ██║  ██╗██║   ██║      ██║      ██║   
+  ╚═╝  ╚═╝╚═╝   ╚═╝      ╚═╝      ╚═╝   
+  */
+  // checks that we can create a new kitty as a trust
+  function checkCanCreateKitty (accountFoster, traitSeed, donationCap, accountFrom, fail) {
+    if (fail) {
+      it('should not make kitty with trait[' + 
+      traitSeed + '] with trust account[' + 
+      accountFrom + '] address and foster account[' + 
+      accountFoster + '] address with a donation cap of ' + 
+      donationCap + ' from account[' + 
+      accountFrom + ']', function (done) {
+        KittyCoinClub.deployed().then(function (instance) {
+          var donationCapWei = web3.toWei(donationCap, 'ether');
+          instance.createKitty(
+            accounts[accountFoster],
+            traitSeed,
+            donationCapWei, {
+              from: accounts[accountFrom],
+            }).catch(function (error) {
+            assert.equal(error.toString(), errorMessage, 'not the correct error message');
+          }).then(done).catch(done);
+        });
+      });
+    } else {
+      it('should make kitty with trait[' + 
+      traitSeed + '] with trust account[' + 
+      accountFrom + '] address and foster account[' + 
+      accountFoster + '] address with a donation cap of ' + 
+      donationCap + ' from account[' + 
+      accountFrom + ']', function (done) {
+        KittyCoinClub.deployed().then(async function (instance) {
+          var donationCapWei = web3.toWei(donationCap, 'ether');
+          await instance.createKitty(
+            accounts[accountFoster],
+            traitSeed,
+            donationCapWei, {
+              from: accounts[accountFrom],
+            })
+            .then(function (result) {
+              assert.include(result.logs[0].event, 'NewKitty', 'NewKitty event was not triggered');
+              const logs = result.logs[0].args;
+              const kittyId = logs.kittyId.toNumber();
+              const traitsId = logs.traitsId;
+              console.log(
+                '\tkittyId: ' + kittyId +
+                '\ttraitsId: ' + web3.toHex(traitsId)
+              );
+            });
+        }).then(done).catch(done);
+      });
+    };
+  };
+
+  /*
+  ██████╗  ██████╗ ███╗   ██╗ █████╗ ████████╗██╗ ██████╗ ███╗   ██╗
+  ██╔══██╗██╔═══██╗████╗  ██║██╔══██╗╚══██╔══╝██║██╔═══██╗████╗  ██║
+  ██║  ██║██║   ██║██╔██╗ ██║███████║   ██║   ██║██║   ██║██╔██╗ ██║
+  ██║  ██║██║   ██║██║╚██╗██║██╔══██║   ██║   ██║██║   ██║██║╚██╗██║
+  ██████╔╝╚██████╔╝██║ ╚████║██║  ██║   ██║   ██║╚██████╔╝██║ ╚████║
+  ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+  */
+  // checks that donations can be made on kitties
+  function checkCanCreateDonation (
+    kittyId, amountTrust, amountFoster, accountTrust, accountFoster, accountFrom, fail) {
+    if (fail) {
+      it('should not donate towards kitty[' + kittyId + '] the value of ' + 
+        amountTrust + 'eth to trust account[' + accountTrust + '] and ' + 
+        amountFoster + 'eth to foster account[' + accountFoster + '] from account[' + 
+        accountFrom + ']', function (done) {
+        KittyCoinClub.deployed().then(function (instance) {
+          var amountTrustWei = web3.toWei(amountTrust, 'ether');
+          var amountFosterWei = web3.toWei(amountFoster, 'ether');
+          var amountTotalWei = amountTrustWei.plus(amountFosterWei);
+          instance.makeDonation(
+            kittyId,
+            amountTrustWei,
+            amountFosterWei,
+            accounts[accountTrust],
+            accounts[accountFoster], { 
+              from: accounts[accountFrom],
+              value: amountTotalWei,
+            }).catch(function (error) {
+            assert.equal(error.toString(), errorMessage, 'not the correct error message');
+          }).then(done).catch(done);
+        });
+      });
+    } else {
+      it('should donate towards kitty[' + kittyId + '] the value of ' + 
+        amountTrust + 'eth to trust account[' + accountTrust + '] and ' + 
+        amountFoster + 'eth to foster account[' + accountFoster + '] from account[' + 
+        accountFrom + ']', function (done) {
+        KittyCoinClub.deployed().then(async function (instance) {
+          var amountTrustWei = web3.toWei(amountTrust, 'ether');
+          var amountFosterWei = web3.toWei(amountFoster, 'ether');
+          var amountTotalWei = amountTrustWei.plus(amountFosterWei);
+          await instance.makeDonation(
+            kittyId,
+            amountTrustWei,
+            amountFosterWei,
+            accounts[accountTrust],
+            accounts[accountFoster], { 
+              from: accounts[accountFrom],
+              value: amountTotalWei,
+            })
+            .then(function (result) {
+              assert.include(result.logs[0].event, 'NewDonation', 'NewDonation event was not triggered');
+            });
+        }).then(done).catch(done);
+      });
+    };
+  };
+
   return {
-    /** Token Details */
+  /** Token Details */
     checkAddsUpToTotalSupply: checkAddsUpToTotalSupply,
     checksTotalSupply: checksTotalSupply,
     checkRemainingFounderCoins: checkRemainingFounderCoins,
@@ -280,9 +390,13 @@ module.exports = function (KittyCoinClub, accounts) {
     checkAccountKittyCount: checkAccountKittyCount,
     checkPendingWithdrawals: checkPendingWithdrawals,
     checkWithdraw: checkWithdraw,
-    /** Trust Manipulation */
+    /** Trust */
     checkCanApplyTrustToAccount: checkCanApplyTrustToAccount,
     checkAccountIsTrust: checkAccountIsTrust,
     checkChangeTrustAddress: checkChangeTrustAddress,
+    /** Kitty */
+    checkCanCreateKitty: checkCanCreateKitty,
+    /** Donation */
+    checkCanCreateDonation: checkCanCreateDonation,
   };
 };
