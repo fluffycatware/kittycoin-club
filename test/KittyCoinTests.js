@@ -8,7 +8,33 @@ contract('KittyCoinClub', function (accounts) {
     global[hfn[i]] = helpfulFunctions[hfn[i]];
   }
 
-  /**
+  /** Accounts
+   * ---------------------------------------------------
+   * | ID | Address                                    |
+   * |----|--------------------------------------------|
+   * | 0  | 0x627306090abaB3A6e1400e9345bC60c78a8BEf57 |
+   * | 1  | 0xf17f52151EbEF6C7334FAD080c5704D77216b732 |
+   * | 2  | 0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef |
+   * | 3  | 0x821aEa9a577a9b44299B9c15c88cf3087F3b5544 |
+   * | 4  | 0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2 |
+   * | 5  | 0x2932b7A2355D6fecc4b5c0B6BD44cC31df247a2e |
+   * | 6  | 0x2191eF87E392377ec08E7c08Eb105Ef5448eCED5 |
+   * | 7  | 0x0F4F2Ac550A1b4e2280d04c21cEa7EBD822934b5 | 
+   * | 8  | 0x6330A553Fc93768F612722BB8c2eC78aC90B3bbc |
+   * | 9  | 0x5AEDA56215b167893e80B4fE645BA6d5Bab767DE | 
+   * ---------------------------------------------------
+   */
+
+  /** Trust Usage
+   * ----------------------------------------------------------------------
+   * | Trust ID | Account ID | Account Address                            |
+   * |----------|------------|------------------------------------------- |
+   * | 0        | 3          | 0x821aEa9a577a9b44299B9c15c88cf3087F3b5544 |
+   * | 1        | 0          | 0x627306090abaB3A6e1400e9345bC60c78a8BEf57 |
+   * ----------------------------------------------------------------------
+   */
+
+  /** Kitty Usage
    * ------------------------------------------------
    * | Kitty ID | Kitty Seed   | Donation Cap (eth) |
    * |----------|--------------|------------------- |
@@ -141,4 +167,34 @@ contract('KittyCoinClub', function (accounts) {
   // account[3] should be able to create kitty[10] with account[3] as trust address 
   // and account[4] address as a foster with a cap of 1.1 eth
   checkCanCreateKitty(4, '0x00dcccea0d', 1.1, 3);
+
+  // account[5] should be able to donate 1.0 eth to kitty[0], with 0.1 to trust and 0.9 to foster
+  checkCanCreateDonation(0, 0.1, 0.9, 1.0, 5);
+
+  // account[5] should be able to donate 1.0 eth to kitty[1], with 0.2 to trust and 0.8 to foster
+  checkCanCreateDonation(1, 0.2, 0.8, 1.0, 5);
+
+  // account[5] should be able to donate 1.0 eth to kitty[2], with 0.3 to trust and 0.7 to foster
+  checkCanCreateDonation(2, 0.3, 0.7, 1.0, 5);
+
+  // account[5] should be able to donate 1.0 eth to kitty[3], with 0.4 to trust and 0.6 to foster
+  checkCanCreateDonation(3, 0.4, 0.6, 1.0, 5);
+
+  // account[5] should be able to donate 1.0 eth to kitty[4], with 0.5 to trust and 0.5 to foster
+  checkCanCreateDonation(4, 0.5, 0.5, 1.0, 5);
+
+  // account[5] should be able to donate 1.0 eth to kitty[5], with 0.6 to trust and 0.4 to foster
+  checkCanCreateDonation(5, 0.6, 0.4, 1.0, 5);
+
+  // account[5] should be able to donate 1.0 eth to kitty[6], with 0.7 to trust and 0.3 to foster
+  checkCanCreateDonation(6, 0.7, 0.3, 1.0, 5);
+
+  // account[5] should be able to donate 1.0 eth to kitty[7], with 0.8 to trust and 0.2 to foster
+  checkCanCreateDonation(7, 0.8, 0.2, 1.0, 5);
+
+  // account[5] should be able to donate 1.0 eth to kitty[8], with 0.9 to trust and 0.1 to foster
+  checkCanCreateDonation(8, 0.9, 0.1, 1.0, 5);
+
+  // account[5] should be able to donate 1.0 eth to kitty[9], with 1.0 to trust and 0.0 to foster
+  checkCanCreateDonation(9, 1.0, 0, 1.0, 5);
 });

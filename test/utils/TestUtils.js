@@ -1,3 +1,6 @@
+/* eslint no-undef: "off" */
+var BigNumber = require('bignumber.js');
+
 module.exports = function (KittyCoinClub, accounts) {
   var errorMessage = 'Error: VM Exception while processing transaction: revert';
 
@@ -328,22 +331,20 @@ module.exports = function (KittyCoinClub, accounts) {
   */
   // checks that donations can be made on kitties
   function checkCanCreateDonation (
-    kittyId, amountTrust, amountFoster, accountTrust, accountFoster, accountFrom, fail) {
+    kittyId, amountTrust, amountFoster, amountTotal, accountFrom, fail) {
     if (fail) {
       it('should not donate towards kitty[' + kittyId + '] the value of ' + 
-        amountTrust + 'eth to trust account[' + accountTrust + '] and ' + 
-        amountFoster + 'eth to foster account[' + accountFoster + '] from account[' + 
+        amountTrust + 'eth and to trust and ' + 
+        amountFoster + 'eth to foster from account[' + 
         accountFrom + ']', function (done) {
         KittyCoinClub.deployed().then(function (instance) {
+          var amountTotalWei = web3.toWei(amountTotal, 'ether');
           var amountTrustWei = web3.toWei(amountTrust, 'ether');
           var amountFosterWei = web3.toWei(amountFoster, 'ether');
-          var amountTotalWei = amountTrustWei.plus(amountFosterWei);
           instance.makeDonation(
             kittyId,
             amountTrustWei,
-            amountFosterWei,
-            accounts[accountTrust],
-            accounts[accountFoster], { 
+            amountFosterWei, { 
               from: accounts[accountFrom],
               value: amountTotalWei,
             }).catch(function (error) {
@@ -353,19 +354,17 @@ module.exports = function (KittyCoinClub, accounts) {
       });
     } else {
       it('should donate towards kitty[' + kittyId + '] the value of ' + 
-        amountTrust + 'eth to trust account[' + accountTrust + '] and ' + 
-        amountFoster + 'eth to foster account[' + accountFoster + '] from account[' + 
+        amountTrust + ' eth and to trust and ' + 
+        amountFoster + ' eth to foster from account[' + 
         accountFrom + ']', function (done) {
         KittyCoinClub.deployed().then(async function (instance) {
+          var amountTotalWei = web3.toWei(amountTotal, 'ether');
           var amountTrustWei = web3.toWei(amountTrust, 'ether');
           var amountFosterWei = web3.toWei(amountFoster, 'ether');
-          var amountTotalWei = amountTrustWei.plus(amountFosterWei);
           await instance.makeDonation(
             kittyId,
             amountTrustWei,
-            amountFosterWei,
-            accounts[accountTrust],
-            accounts[accountFoster], { 
+            amountFosterWei, { 
               from: accounts[accountFrom],
               value: amountTotalWei,
             })

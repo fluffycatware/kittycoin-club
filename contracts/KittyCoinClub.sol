@@ -315,11 +315,11 @@ contract KittyCoinClub is Ownable {
         uint256 donationTotal = msg.value;
         uint256 fosterOverflow;
         uint256 fosterAmount = _fosterAmount;
-        if (_fosterAmount >= kitties[_kittyId].donationCap) { // cap = 3 // amount = 3.5
-            fosterOverflow = SafeMath.sub(_fosterAmount, kitties[_kittyId].donationCap); // overflow = 3.5 - 3 = 0.5
-            fosterAmount = SafeMath.sub(_fosterAmount, fosterOverflow); // 3.5 - 0.5 = 3.0
+        if (_fosterAmount >= kitties[_kittyId].donationCap) {
+            fosterOverflow = SafeMath.sub(_fosterAmount, kitties[_kittyId].donationCap);
+            fosterAmount = SafeMath.sub(_fosterAmount, fosterOverflow);
         }
-        uint256 trustAmount = SafeMath.sub(donationTotal, SafeMath.add(fosterAmount, fosterOverflow)); // 4 - (3.0 + 0.5) = 0.5
+        uint256 trustAmount = SafeMath.sub(donationTotal, fosterAmount);
         // Validate the maths worked correctly
         assert(msg.value == SafeMath.add(trustAmount, fosterAmount));
 
