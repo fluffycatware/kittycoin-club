@@ -26,6 +26,7 @@
     "babel-preset-stage-2": "^6.18.0",
     "babel-preset-stage-3": "^6.17.0",
     "babel-register": "^6.23.0",
+    "bignumber.js": "^6.0.0",
     "chai": "^4.0.2",
     "chai-as-promised": "^7.0.0",
     "chai-bignumber": "^2.0.0",
@@ -48,7 +49,6 @@
     "solidity-parser": "^0.4.0"
   },
   "dependencies": {
-    "bignumber.js": "^6.0.0",
     "dotenv": "^5.0.0",
     "ethjs-abi": "^0.2.1",
     "jsonfile": "^4.0.0",

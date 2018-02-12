@@ -1,6 +1,3 @@
-/* eslint no-undef: "off" */
-var BigNumber = require('bignumber.js');
-
 module.exports = function (KittyCoinClub, accounts) {
   var errorMessage = 'Error: VM Exception while processing transaction: revert';
 
