@@ -373,6 +373,33 @@ module.exports = function (KittyCoinClub, accounts) {
     };
   };
 
+  // checks the number of donations for a given address
+  function checkNumberOfDonationsForDonator (account, expectedDonations, fail) {
+    if (fail) {
+      it('should verify that account[' + account + '] does not have ' + 
+      expectedDonations + ' donations', function (done) {
+        KittyCoinClub.deployed().then(async function (instance) {
+          await instance.getDonationsByDonator(accounts[account])
+            .then(function (result) {
+              assert.notEqual(result.length, expectedDonations, 
+                'account[' + account + '] does have ' + expectedDonations + ' donations');
+            });
+        }).then(done).catch(done);
+      });
+    } else {
+      it('should verify account[' + account + '] has ' + 
+      expectedDonations + ' donations', function (done) {
+        KittyCoinClub.deployed().then(async function (instance) {
+          await instance.getDonationsByDonator(accounts[account])
+            .then(function (result) {
+              assert.equal(result.length, expectedDonations, 
+                'account[' + account + '] does not have ' + expectedDonations + ' donations');
+            });
+        }).then(done).catch(done);
+      });
+    };
+  };
+
   return {
   /** Token Details */
     checkAddsUpToTotalSupply: checkAddsUpToTotalSupply,
@@ -394,5 +421,6 @@ module.exports = function (KittyCoinClub, accounts) {
     checkCanCreateKitty: checkCanCreateKitty,
     /** Donation */
     checkCanCreateDonation: checkCanCreateDonation,
+    checkNumberOfDonationsForDonator: checkNumberOfDonationsForDonator,
   };
 };

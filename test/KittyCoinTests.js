@@ -197,4 +197,13 @@ contract('KittyCoinClub', function (accounts) {
 
   // account[5] should be able to donate 1.0 eth to kitty[9], with 1.0 to trust and 0.0 to foster
   checkCanCreateDonation(9, 1.0, 0, 1.0, 5);
+
+  // account[5] should have 10 donations
+  checkNumberOfDonationsForDonator(5, 10);
+
+  // account[4] should not have 10 donations
+  checkNumberOfDonationsForDonator(4, 10, 'expect to fail');
+
+  // account[2] should have 0 donations
+  checkNumberOfDonationsForDonator(2, 0);
 });
