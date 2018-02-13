@@ -211,8 +211,8 @@
                         <div class="col-sm-8">
                             <div class="input-group">
                                 <input type="text" class="form-control" id="inputKittyName" placeholder="" onKeyUp="randomKitty();">
-                                <span class="input-group-addon">ID</span>
-                                <input type="text" class="form-control" id="randKittyId" placeholder="" disabled>
+                                <span class="input-group-addon">Seed</span>
+                                <input type="text" class="form-control" id="randKittySeed" placeholder="" disabled>
                             </div>
                         </div>
                     </div>
@@ -333,6 +333,7 @@
         crossorigin="anonymous"></script>
 
     <!-- ========= Local JavaScript ========= -->
+    <script src="js/lib/bignumber.js"></script>
     <script src="js/lib/kittycoinparser.js"></script>
     <script src="js/lib/web3.min.js"></script>
     <script src="js/lib/truffle-contract.min.js"></script>

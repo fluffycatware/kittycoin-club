@@ -1,20 +1,19 @@
 module.exports = function (KittyCoinClub, accounts) {
   var errorMessage = 'Error: VM Exception while processing transaction: revert';
 
-  /* ANSI Shadow (http://patorjk.com/software/taag)
-
-    ████████╗ ██████╗ ██╗  ██╗███████╗███╗   ██╗        
-    ╚══██╔══╝██╔═══██╗██║ ██╔╝██╔════╝████╗  ██║        
-       ██║   ██║   ██║█████╔╝ █████╗  ██╔██╗ ██║        
-       ██║   ██║   ██║██╔═██╗ ██╔══╝  ██║╚██╗██║        
-       ██║   ╚██████╔╝██║  ██╗███████╗██║ ╚████║        
-       ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝        
-                                                        
-    ██████╗ ███████╗████████╗ █████╗ ██╗██╗     ███████╗
-    ██╔══██╗██╔════╝╚══██╔══╝██╔══██╗██║██║     ██╔════╝
-    ██║  ██║█████╗     ██║   ███████║██║██║     ███████╗
-    ██║  ██║██╔══╝     ██║   ██╔══██║██║██║     ╚════██║
-    ██████╔╝███████╗   ██║   ██║  ██║██║███████╗███████║                                                           
+  /* Doom (http://patorjk.com/software/taag)
+   _____     _                
+  |_   _|   | |               
+    | | ___ | | _____ _ __    
+    | |/ _ \| |/ / _ \ '_ \   
+    | | (_) |   <  __/ | | |  
+    \_/\___/|_|\_\___|_| |_|  
+  ______     _        _ _     
+  |  _  \   | |      (_) |    
+  | | | |___| |_ __ _ _| |___ 
+  | | | / _ \ __/ _` | | / __|
+  | |/ /  __/ || (_| | | \__ \
+  |___/ \___|\__\__,_|_|_|___/
   */
 
   // checks whether remainingKittyCoins and remainingFounderCoins equal to totalSupply
@@ -71,6 +70,7 @@ module.exports = function (KittyCoinClub, accounts) {
     });
   };
 
+  // checks to make sure all token variables are correctly instantiated
   function checkTokenVariables (tokenName, tokenSymbol, tokenDecimals) {
     it('token should have the name ' + tokenName + 
       ', symbol ' + tokenSymbol + 
@@ -90,19 +90,18 @@ module.exports = function (KittyCoinClub, accounts) {
   };
 
   /*
-   █████╗  ██████╗ ██████╗ ██████╗ ██╗   ██╗███╗   ██╗████████╗     
-  ██╔══██╗██╔════╝██╔════╝██╔═══██╗██║   ██║████╗  ██║╚══██╔══╝     
-  ███████║██║     ██║     ██║   ██║██║   ██║██╔██╗ ██║   ██║        
-  ██╔══██║██║     ██║     ██║   ██║██║   ██║██║╚██╗██║   ██║        
-  ██║  ██║╚██████╗╚██████╗╚██████╔╝╚██████╔╝██║ ╚████║   ██║        
-  ╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝   ╚═╝        
-                                                                    
-  ██████╗  █████╗ ██╗      █████╗ ███╗   ██╗ ██████╗███████╗███████╗
-  ██╔══██╗██╔══██╗██║     ██╔══██╗████╗  ██║██╔════╝██╔════╝██╔════╝
-  ██████╔╝███████║██║     ███████║██╔██╗ ██║██║     █████╗  ███████╗
-  ██╔══██╗██╔══██║██║     ██╔══██║██║╚██╗██║██║     ██╔══╝  ╚════██║
-  ██████╔╝██║  ██║███████╗██║  ██║██║ ╚████║╚██████╗███████╗███████║
-  ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝╚══════╝╚══════╝
+    ___                            _       
+   / _ \                          | |      
+  / /_\ \ ___ ___ ___  _   _ _ __ | |_     
+  |  _  |/ __/ __/ _ \| | | | '_ \| __|    
+  | | | | (_| (_| (_) | |_| | | | | |_     
+  \_| |_/\___\___\___/ \__,_|_| |_|\__|    
+  ______       _                           
+  | ___ \     | |                          
+  | |_/ / __ _| | __ _ _ __   ___ ___  ___ 
+  | ___ \/ _` | |/ _` | '_ \ / __/ _ \/ __|
+  | |_/ / (_| | | (_| | | | | (_|  __/\__ \
+  \____/ \__,_|_|\__,_|_| |_|\___\___||___/
   */
 
   // checks to see whether an account has the expected value for kittyCoinCount
@@ -180,12 +179,12 @@ module.exports = function (KittyCoinClub, accounts) {
   };
 
   /*
-   ████████╗██████╗ ██╗   ██╗███████╗████████╗                                                     
-   ╚══██╔══╝██╔══██╗██║   ██║██╔════╝╚══██╔══╝                                                     
-      ██║   ██████╔╝██║   ██║███████╗   ██║                                                        
-      ██║   ██╔══██╗██║   ██║╚════██║   ██║                                                        
-      ██║   ██║  ██║╚██████╔╝███████║   ██║                                                        
-      ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚══════╝   ╚═╝                                                        
+   _____              _   
+  |_   _|            | |  
+    | |_ __ _   _ ___| |_ 
+    | | '__| | | / __| __|
+    | | |  | |_| \__ \ |_ 
+    \_/_|   \__,_|___/\__|                                   
   */
   // checks that we can apply trust status to an account
   function checkCanApplyTrustToAccount (accountTo, accountFrom, fail) {
@@ -260,12 +259,14 @@ module.exports = function (KittyCoinClub, accounts) {
   };
 
   /*
-  ██╗  ██╗██╗████████╗████████╗██╗   ██╗
-  ██║ ██╔╝██║╚══██╔══╝╚══██╔══╝╚██╗ ██╔╝
-  █████╔╝ ██║   ██║      ██║    ╚████╔╝ 
-  ██╔═██╗ ██║   ██║      ██║     ╚██╔╝  
-  ██║  ██╗██║   ██║      ██║      ██║   
-  ╚═╝  ╚═╝╚═╝   ╚═╝      ╚═╝      ╚═╝   
+   _   ___ _   _         
+  | | / (_) | | |        
+  | |/ / _| |_| |_ _   _ 
+  |    \| | __| __| | | |
+  | |\  \ | |_| |_| |_| |
+  \_| \_/_|\__|\__|\__, |
+                    __/ |
+                   |___/ 
   */
   // checks that we can create a new kitty as a trust
   function checkCanCreateKitty (accountFoster, traitSeed, donationCap, accountFrom, fail) {
@@ -307,10 +308,10 @@ module.exports = function (KittyCoinClub, accounts) {
               assert.include(result.logs[0].event, 'NewKitty', 'NewKitty event was not triggered');
               const logs = result.logs[0].args;
               const kittyId = logs.kittyId.toNumber();
-              const traitsId = logs.traitsId;
+              const traitSeed = logs.traitSeed;
               console.log(
                 '\tkittyId: ' + kittyId +
-                '\ttraitsId: ' + web3.toHex(traitsId)
+                '\ttraitsId: ' + web3.toHex(traitSeed)
               );
             });
         }).then(done).catch(done);
@@ -319,12 +320,12 @@ module.exports = function (KittyCoinClub, accounts) {
   };
 
   /*
-  ██████╗  ██████╗ ███╗   ██╗ █████╗ ████████╗██╗ ██████╗ ███╗   ██╗
-  ██╔══██╗██╔═══██╗████╗  ██║██╔══██╗╚══██╔══╝██║██╔═══██╗████╗  ██║
-  ██║  ██║██║   ██║██╔██╗ ██║███████║   ██║   ██║██║   ██║██╔██╗ ██║
-  ██║  ██║██║   ██║██║╚██╗██║██╔══██║   ██║   ██║██║   ██║██║╚██╗██║
-  ██████╔╝╚██████╔╝██║ ╚████║██║  ██║   ██║   ██║╚██████╔╝██║ ╚████║
-  ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+  ______                  _   _             
+  |  _  \                | | (_)            
+  | | | |___  _ __   __ _| |_ _  ___  _ __  
+  | | | / _ \| '_ \ / _` | __| |/ _ \| '_ \ 
+  | |/ / (_) | | | | (_| | |_| | (_) | | | |
+  |___/ \___/|_| |_|\__,_|\__|_|\___/|_| |_|
   */
   // checks that donations can be made on kitties
   function checkCanCreateDonation (
@@ -400,6 +401,17 @@ module.exports = function (KittyCoinClub, accounts) {
     };
   };
 
+  /*
+   _   ___ _   _         _____       _       
+  | | / (_) | | |       /  __ \     (_)      
+  | |/ / _| |_| |_ _   _| /  \/ ___  _ _ __  
+  |    \| | __| __| | | | |    / _ \| | '_ \ 
+  | |\  \ | |_| |_| |_| | \__/\ (_) | | | | |
+  \_| \_/_|\__|\__|\__, |\____/\___/|_|_| |_|
+                    __/ |                    
+                   |___/ 
+  */
+
   return {
   /** Token Details */
     checkAddsUpToTotalSupply: checkAddsUpToTotalSupply,
@@ -422,5 +434,7 @@ module.exports = function (KittyCoinClub, accounts) {
     /** Donation */
     checkCanCreateDonation: checkCanCreateDonation,
     checkNumberOfDonationsForDonator: checkNumberOfDonationsForDonator,
+    /** KittyCoin */
+
   };
 };

@@ -1,3 +1,5 @@
+var BigNumber = require('bignumber.js');
+
 /** Updates the trust address field with the users address. */
 function populateUserData () {
   if (typeof web3 !== 'undefined') {
@@ -22,7 +24,7 @@ function generateRandomCoinImageHex() {
     Math.floor(Math.random() * 255).toString(16) +
     Math.floor(Math.random() * 255).toString(16) +
     Math.floor(Math.random() * 255).toString(16);
-  $('#randKittyId').val(output_string);
+  $('#randKittySeed').val(output_string);
   return output_string;
 }
 
@@ -111,9 +113,7 @@ var App = {
       return kittyCoinClubInstance.getKitties.call();
     }).then((kitties) => {
       for (var i = 0; i < kitties.length; i++) {
-        if (kitties[i] !== '0x0000000000000000000000000000000000000000') {
-          console.log(kitties[i]);
-        }
+        App.getKittyDetails(kitties[i]);
       }
     }).catch((err) => {
       console.log(err.message);
@@ -129,10 +129,52 @@ var App = {
       return kittyCoinClubInstance.getDonations.call();
     }).then((donations) => {
       for (var i = 0; i < donations.length; i++) {
-        if (donations[i] !== '0x0000000000000000000000000000000000000000') {
-          console.log(donations[i]);
-        }
+        App.getDonationDetails(donations[i]);
       }
+    }).catch((err) => {
+      console.log(err.message);
+    });
+  },
+
+  getKittyDetails(kittyId) {
+    let kittyCoinClubInstance;
+
+    App.contracts.KittyCoinClub.deployed().then((instance) => {
+      kittyCoinClubInstance = instance;
+
+      return kittyCoinClubInstance.getKitty(kittyId);
+    }).then((kitty) => {
+      var kittyJson = {
+        'kittyId'       : kittyId.toNumber(),
+        'isEnabled'     : kitty[0],
+        'trustAddress'  : kitty[1],
+        'fosterAddress' : kitty[2],
+        'traitSeed'     : kitty[3],
+        'donationCap'   : web3.fromWei(kitty[4]).toNumber()
+      };
+      console.log(kittyJson);
+    }).catch((err) => {
+      console.log(err.message);
+    });
+  },
+
+  getDonationDetails(donationId) {
+    let kittyCoinClubInstance;
+
+    App.contracts.KittyCoinClub.deployed().then((instance) => {
+      kittyCoinClubInstance = instance;
+
+      return kittyCoinClubInstance.getDonation(donationId);
+    }).then((donation) => {
+      var donationJson = {
+        'donationId'    : donationId.toNumber(),
+        'kittyId'       : donation[0],
+        'trustAddress'  : donation[1],
+        'fosterAddress' : donation[2],
+        'trustAmount'   : web3.fromWei(donation[3]).toNumber(),
+        'fosterAmount'  : web3.fromWei(donation[4]).toNumber()
+      };
+      console.log(donationJson);
     }).catch((err) => {
       console.log(err.message);
     });
@@ -165,11 +207,17 @@ var App = {
       App.contracts.KittyCoinClub.deployed().then((instance) => {
         kittyCoinClubInstance = instance;
 
+        // Compute the ratio of the donation
+        var foster = new BigNumber(donationAmount).times(donationRatio).dividedBy(100);
+        var trust = new BigNumber(donationAmount).minus(foster);
+        var totalAmount = web3.toWei(donationAmount, 'ether');
+        var trustAmount = web3.toWei(trust.toNumber(), 'ether');
+        var fosterAmount = web3.toWei(foster.toNumber(), 'ether');
+
         // Execute donate as a transaction by sending account
-        var price = web3.toWei(donationAmount, "ether");
-        return kittyCoinClubInstance.makeDonation(kittyId, price, donationRatio, {
+        return kittyCoinClubInstance.makeDonation(kittyId, trustAmount, fosterAmount, {
           from: account,
-          value: price,
+          value: totalAmount,
         });
       }).then(result => App.loadDonations()).catch((err) => {
         console.log(err.message);
@@ -182,7 +230,7 @@ var App = {
   
     // Get the form fields
     var kittyName = $(event.target.elements)[0].value;
-    var kittyId = $(event.target.elements)[1].value;
+    var kittySeed = $(event.target.elements)[1].value;
     var trustAddress = $(event.target.elements)[2].value;
     var fosterAddress = $(event.target.elements)[3].value;
     var donationCap = parseFloat($(event.target.elements)[4].value);
@@ -200,8 +248,8 @@ var App = {
         kittyCoinClubInstance = instance;
 
         // Execute create kitty function
-        var donateCap = web3.toWei(donationCap, "ether");
-        return kittyCoinClubInstance.createKitty(fosterAddress, kittyId, donationCap, {
+        var donateCap = web3.toWei(donationCap, 'ether');
+        return kittyCoinClubInstance.createKitty(fosterAddress, kittySeed, donateCap, {
           from: account,
         });
       }).then(result => App.loadKitties()).catch((err) => {
