@@ -4,6 +4,8 @@ function populateUserData () {
     var account = web3.eth.defaultAccount;
     if (account) {
       $('#inputTrustAddress').val(account);
+    } else {
+      window.location.assign("sign-in.html");
     }
   }
 }

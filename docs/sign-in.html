@@ -1,0 +1,83 @@
+<html lang="en">
+
+<head>
+    <title>KittyCoin Club</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
+        crossorigin="anonymous">
+
+    <!-- Custom styles for this template -->
+    <link href="assets/css/main.css" rel="stylesheet">
+
+    <!-- Fonts from Google Fonts -->
+    <link href='https://fonts.googleapis.com/css?family=Lato:300,400,900' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+    <!-- Fixed navbar -->
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="index.html">
+                    <b>KittyCoin Club</b>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row mt centered">
+            <div class="col-sm-12">
+                <h1>Change network to Main Ethereum Network</h1>
+                <h3>Just open metamask and use dropdown at the top</h3>
+            </div>
+        </div>
+        <!-- /row -->
+
+        <!-- MetaMask Warning -->
+        <div class="row mt centered">
+            <div class="col-lg-12">
+                <img class="rounded" src="/assets/img/metamask-networkmenu.png" alt="metamask network menu">
+            </div>
+        </div>
+
+    </div>
+    <!-- /container -->
+
+    <div class="container">
+        <hr>
+        <p class="centered">Created by Nathan Glover - Attribution License 3.0 - 2018</p>
+    </div>
+    <!-- /container -->
+
+    <!-- ========= Bootsrap 4 - JavaScript ========= -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+        crossorigin="anonymous"></script>
+
+    <!-- ========= Local JavaScript ========= -->
+    <script src="js/lib/kittycoinparser.js"></script>
+    <script src="js/lib/web3.min.js"></script>
+    <script src="js/lib/truffle-contract.min.js"></script>
+    <script>
+        if (typeof web3 !== 'undefined') {
+            var account = web3.eth.defaultAccount;
+            if (account) {
+                window.location.assign("index.html");
+            }
+        }
+    </script>
+</body>
+
+</html>
