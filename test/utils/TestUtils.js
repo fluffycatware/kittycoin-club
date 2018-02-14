@@ -306,13 +306,85 @@ module.exports = function (KittyCoinClub, accounts) {
             })
             .then(function (result) {
               assert.include(result.logs[0].event, 'NewKitty', 'NewKitty event was not triggered');
-              const logs = result.logs[0].args;
-              const kittyId = logs.kittyId.toNumber();
-              const traitSeed = logs.traitSeed;
-              console.log(
-                '\tkittyId: ' + kittyId +
-                '\ttraitsId: ' + web3.toHex(traitSeed)
-              );
+              // const logs = result.logs[0].args;
+              // const kittyId = logs.kittyId.toNumber();
+              // const traitSeed = logs.traitSeed;
+              // console.log(
+              //   '\tkittyId: ' + kittyId +
+              //   '\ttraitsId: ' + web3.toHex(traitSeed)
+              // );
+            });
+        }).then(done).catch(done);
+      });
+    };
+  };
+
+  // checks the total number of kitties
+  function checkKittyAggregator (numberOfKitties, fail) {
+    if (fail) {
+      it('should verify the number of kitties is not ' + numberOfKitties, function (done) {
+        KittyCoinClub.deployed().then(async function (instance) {
+          await instance.getKitties()
+            .then(function (result) {
+              assert.notEqual(result.length, numberOfKitties, 
+                'kitty count is ' + 
+                result.length + ' which equels the expected ' + 
+                numberOfKitties + ' kitties');
+            });
+        }).then(done).catch(done);
+      });
+    } else {
+      it('should verify the number of kitties is ' + numberOfKitties, function (done) {
+        KittyCoinClub.deployed().then(async function (instance) {
+          await instance.getKitties()
+            .then(function (result) {
+              assert.equal(result.length, numberOfKitties, 
+                'kitty count is ' + 
+                result.length + ' and not the expected ' + 
+                numberOfKitties + ' kitties');
+            });
+        }).then(done).catch(done);
+      });
+    };
+  };
+
+  // checks the data for a given kitty
+  function checkKitty (kittyId, isEnabled, trust, foster, traitSeed, donationCap, fail) {
+    if (fail) {
+      it('should not verify kittyId[' + kittyId + 
+      '] isEnabled: ' + isEnabled + 
+      ', trustAddress: ' + accounts[trust] + 
+      ', fosterAddress: ' + accounts[foster] + 
+      ', traitSeed: ' + traitSeed + 
+      ', donationCap: ' + donationCap, function (done) {
+        KittyCoinClub.deployed().then(async function (instance) {
+          await instance.getKitty(kittyId)
+            .then(function (result) {
+              assert.notEqual(result[0], isEnabled, 'isEnabled does equal ' + isEnabled);
+              assert.notEqual(result[1], accounts[trust], 'trustAddress does equal ' + accounts[trust]);
+              assert.notEqual(result[2], accounts[foster], 'fosterAddress does equal ' + accounts[foster]);
+              assert.notEqual(result[3], traitSeed, 'traitSeed does equal ' + traitSeed);
+              assert.notEqual(web3.fromWei(result[4], 'ether'), donationCap, 
+                'donationCap: ' + donationCap + ' does equal ' + web3.fromWei(result[4], 'ether'));
+            });
+        }).then(done).catch(done);
+      });
+    } else {
+      it('should verify kittyId[' + kittyId + 
+      '] isEnabled: ' + isEnabled + 
+      ', trustAddress: ' + accounts[trust] + 
+      ', fosterAddress: ' + accounts[foster] + 
+      ', traitSeed: ' + traitSeed + 
+      ', donationCap: ' + donationCap, function (done) {
+        KittyCoinClub.deployed().then(async function (instance) {
+          await instance.getKitty(kittyId)
+            .then(function (result) {
+              assert.equal(result[0], isEnabled, 'isEnabled does not equal ' + isEnabled);
+              assert.equal(result[1], accounts[trust], 'trustAddress does not equal ' + accounts[trust]);
+              assert.equal(result[2], accounts[foster], 'fosterAddress does not equal ' + accounts[foster]);
+              assert.equal(result[3], traitSeed, 'traitSeed does not equal ' + traitSeed);
+              assert.equal(web3.fromWei(result[4], 'ether'), donationCap, 
+                'donationCap: ' + donationCap + ' does not equal ' + web3.fromWei(result[4], 'ether'));
             });
         }).then(done).catch(done);
       });
@@ -401,6 +473,80 @@ module.exports = function (KittyCoinClub, accounts) {
     };
   };
 
+  // checks the total number of donations
+  function checkDonationAggregator (numberOfDonations, fail) {
+    if (fail) {
+      it('should verify the number of donations is not ' + numberOfDonations, function (done) {
+        KittyCoinClub.deployed().then(async function (instance) {
+          await instance.getDonations()
+            .then(function (result) {
+              assert.notEqual(result.length, numberOfDonations, 
+                'donation count is ' + 
+                result.length + ' which equels the expected ' + 
+                numberOfDonations + ' donations');
+            });
+        }).then(done).catch(done);
+      });
+    } else {
+      it('should verify the number of donations is ' + numberOfDonations, function (done) {
+        KittyCoinClub.deployed().then(async function (instance) {
+          await instance.getDonations()
+            .then(function (result) {
+              assert.equal(result.length, numberOfDonations, 
+                'donation count is ' + 
+                result.length + ' and not the expected ' + 
+                numberOfDonations + ' donations');
+            });
+        }).then(done).catch(done);
+      });
+    };
+  };
+
+  // checks the data for a given donation
+  function checkDonation (donationId, kittyId, trust, foster, trustAmount, fosterAmount, fail) {
+    if (fail) {
+      it('should not verify donationId[' + donationId + 
+      '] kittyId: ' + kittyId + 
+      ', trustAddress: ' + accounts[trust] + 
+      ', fosterAddress: ' + accounts[foster] + 
+      ', trustAmount: ' + trustAmount + 
+      ', fosterAmount: ' + fosterAmount, function (done) {
+        KittyCoinClub.deployed().then(async function (instance) {
+          await instance.getDonation(donationId)
+            .then(function (result) {
+              assert.notEqual(result[0], kittyId, 'kittyId does equal ' + kittyId);
+              assert.notEqual(result[1], accounts[trust], 'trustAddress does equal ' + accounts[trust]);
+              assert.notEqual(result[2], accounts[foster], 'fosterAddress does equal ' + accounts[foster]);
+              assert.notEqual(web3.fromWei(result[3], 'ether'), trustAmount, 
+                'trustAmount: ' + trustAmount + ' does equal ' + web3.fromWei(result[3], 'ether'));
+              assert.notEqual(web3.fromWei(result[4], 'ether'), fosterAmount, 
+                'fosterAmount: ' + fosterAmount + ' does equal ' + web3.fromWei(result[4], 'ether'));
+            });
+        }).then(done).catch(done);
+      });
+    } else {
+      it('should verify donationId[' + donationId + 
+      '] kittyId: ' + kittyId + 
+      ', trustAddress: ' + accounts[trust] + 
+      ', fosterAddress: ' + accounts[foster] + 
+      ', trustAmount: ' + trustAmount + 
+      ', fosterAmount: ' + fosterAmount, function (done) {
+        KittyCoinClub.deployed().then(async function (instance) {
+          await instance.getDonation(donationId)
+            .then(function (result) {
+              assert.equal(result[0], kittyId, 'kittyId does not equal ' + kittyId);
+              assert.equal(result[1], accounts[trust], 'trustAddress does not equal ' + accounts[trust]);
+              assert.equal(result[2], accounts[foster], 'fosterAddress does not equal ' + accounts[foster]);
+              assert.equal(web3.fromWei(result[3], 'ether'), trustAmount, 
+                'trustAmount: ' + trustAmount + ' does not equal ' + web3.fromWei(result[3], 'ether'));
+              assert.equal(web3.fromWei(result[4], 'ether'), fosterAmount, 
+                'fosterAmount: ' + fosterAmount + ' does not equal ' + web3.fromWei(result[4], 'ether'));
+            });
+        }).then(done).catch(done);
+      });
+    };
+  };
+
   /*
    _   ___ _   _         _____       _       
   | | / (_) | | |       /  __ \     (_)      
@@ -411,6 +557,34 @@ module.exports = function (KittyCoinClub, accounts) {
                     __/ |                    
                    |___/ 
   */
+  // checks the total number of kittycoins
+  function checkKittyCoinAggregator (numberOfKittyCoins, account, fail) {
+    if (fail) {
+      it('should verify the number of kittycoins is not ' + numberOfKittyCoins, function (done) {
+        KittyCoinClub.deployed().then(async function (instance) {
+          await instance.getKittyCoinsByOwner(accounts[account])
+            .then(function (result) {
+              assert.notEqual(result.length, numberOfKittyCoins, 
+                'kittycoin count is ' + 
+                result.length + ' which equels the expected ' + 
+                numberOfKittyCoins + ' kittycoins');
+            });
+        }).then(done).catch(done);
+      });
+    } else {
+      it('should verify the number of kittycoins is ' + numberOfKittyCoins, function (done) {
+        KittyCoinClub.deployed().then(async function (instance) {
+          await instance.getKittyCoinsByOwner(accounts[account])
+            .then(function (result) {
+              assert.equal(result.length, numberOfKittyCoins, 
+                'kittycoin count is ' + 
+                result.length + ' and not the expected ' + 
+                numberOfKittyCoins + ' kittycoins');
+            });
+        }).then(done).catch(done);
+      });
+    };
+  };
 
   return {
   /** Token Details */
@@ -431,10 +605,14 @@ module.exports = function (KittyCoinClub, accounts) {
     checkChangeTrustAddress: checkChangeTrustAddress,
     /** Kitty */
     checkCanCreateKitty: checkCanCreateKitty,
+    checkKittyAggregator: checkKittyAggregator,
+    checkKitty: checkKitty,
     /** Donation */
     checkCanCreateDonation: checkCanCreateDonation,
     checkNumberOfDonationsForDonator: checkNumberOfDonationsForDonator,
+    checkDonationAggregator: checkDonationAggregator,
+    checkDonation: checkDonation,
     /** KittyCoin */
-
+    checkKittyCoinAggregator: checkKittyCoinAggregator,
   };
 };

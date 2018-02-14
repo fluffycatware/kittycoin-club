@@ -206,4 +206,36 @@ contract('KittyCoinClub', function (accounts) {
 
   // account[2] should have 0 donations
   checkNumberOfDonationsForDonator(2, 0);
+
+  // total number of donations is 10
+  checkDonationAggregator(10);
+
+  // total number of donations is not 5
+  checkDonationAggregator(5, 'expect to fail');
+
+  // total number of kitties is 11
+  checkKittyAggregator(11);
+
+  // total number of kitties is not 5
+  checkKittyAggregator(5, 'expect to fail');
+
+  // account[5] should have 0 kittycoins
+  checkKittyCoinAggregator(0, 5);
+
+  // account[5] should not have 1 kittycoins
+  checkKittyCoinAggregator(1, 5, 'expect to fail');
+
+  // kitty[0] should be enabled, account[3] trust, account[4] foster, donationCap of 0.1 have traitSeed 0x00738ea43a
+  checkKitty(0, true, 3, 4, '0x00738ea43a', 0.1);
+
+  // kitty[1] should not be enabled, account[3] trust, account[4] foster, donationCap of 0.1 have traitSeed 0x00738ea43a
+  checkKitty(1, false, 1, 2, '0x00738ea43a', 0.1, 'expect to fail');
+
+  // donation[0] should have kitty[0], account[3] trust, account[4] foster, 
+  // 0.9 eth trust, 0.1 eth foster due to foster cap of 0.1 eth
+  checkDonation(0, 0, 3, 4, 0.9, 0.1);
+
+  // donation[0] should not have kitty[1], account[1] trust, account[2] foster, 
+  // 0.1 eth trust, 0.9 eth foster
+  checkDonation(0, 1, 1, 2, 0.1, 0.9, 'expect to fail');
 });
