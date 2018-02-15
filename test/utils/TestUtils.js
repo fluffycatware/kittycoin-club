@@ -15,25 +15,6 @@ module.exports = function (KittyCoinClub, accounts) {
   | |/ /  __/ || (_| | | \__ \
   |___/ \___|\__\__,_|_|_|___/
   */
-
-  // checks whether remainingKittyCoins and remainingFounderCoins equal to totalSupply
-  function checkAddsUpToTotalSupply () {
-    it('should be equal to totalSupply', function (done) {
-      KittyCoinClub.deployed().then(function (instance) {
-        instance.totalSupply.call().then(function (totalSupply) {
-          instance.remainingKittyCoins.call().then(function (remainingKittyCoins) {
-            instance.remainingFounderCoins.call().then(function (remainingFounderCoins) {
-              assert.equal((
-                remainingKittyCoins.toNumber() +
-                remainingFounderCoins.toNumber()), totalSupply.toNumber()
-                , 'total remainingCats + remainingGenesisCats not equal to totalSupply');
-            }).then(done).catch(done);
-          });
-        });
-      });
-    });
-  };
-
   // checks whether the expected value of totalSupply is the current value
   function checksTotalSupply (expectedValue) {
     it('totalSupply should be equal to ' + expectedValue, function (done) {
@@ -71,19 +52,15 @@ module.exports = function (KittyCoinClub, accounts) {
   };
 
   // checks to make sure all token variables are correctly instantiated
-  function checkTokenVariables (tokenName, tokenSymbol, tokenDecimals) {
+  function checkTokenVariables (tokenName, tokenSymbol) {
     it('token should have the name ' + tokenName + 
-      ', symbol ' + tokenSymbol + 
-      ' and decimals of ' + tokenDecimals, function (done) {
+      ', symbol ' + tokenSymbol, function (done) {
       KittyCoinClub.deployed().then(function (instance) {
         instance.name.call().then(function (_tokenName) {
           instance.symbol.call().then(function (_tokenSymbol) {
-            instance.decimals.call().then(function (_tokenDecimals) {
-              assert.equal(_tokenName, tokenName, 'tokenName does not equal ' + tokenName);
-              assert.equal(_tokenSymbol, tokenSymbol, 'tokenSymbol does not equal ' + tokenSymbol);
-              assert.equal(_tokenDecimals, tokenDecimals, 'tokenDecimals does not equal ' + tokenDecimals);
-            }).then(done).catch(done);
-          });
+            assert.equal(_tokenName, tokenName, 'tokenName does not equal ' + tokenName);
+            assert.equal(_tokenSymbol, tokenSymbol, 'tokenSymbol does not equal ' + tokenSymbol);
+          }).then(done).catch(done);
         });
       });
     });
@@ -557,38 +534,9 @@ module.exports = function (KittyCoinClub, accounts) {
                     __/ |                    
                    |___/ 
   */
-  // checks the total number of kittycoins
-  function checkKittyCoinAggregator (numberOfKittyCoins, account, fail) {
-    if (fail) {
-      it('should verify the number of kittycoins is not ' + numberOfKittyCoins, function (done) {
-        KittyCoinClub.deployed().then(async function (instance) {
-          await instance.getKittyCoinsByOwner(accounts[account])
-            .then(function (result) {
-              assert.notEqual(result.length, numberOfKittyCoins, 
-                'kittycoin count is ' + 
-                result.length + ' which equels the expected ' + 
-                numberOfKittyCoins + ' kittycoins');
-            });
-        }).then(done).catch(done);
-      });
-    } else {
-      it('should verify the number of kittycoins is ' + numberOfKittyCoins, function (done) {
-        KittyCoinClub.deployed().then(async function (instance) {
-          await instance.getKittyCoinsByOwner(accounts[account])
-            .then(function (result) {
-              assert.equal(result.length, numberOfKittyCoins, 
-                'kittycoin count is ' + 
-                result.length + ' and not the expected ' + 
-                numberOfKittyCoins + ' kittycoins');
-            });
-        }).then(done).catch(done);
-      });
-    };
-  };
 
   return {
   /** Token Details */
-    checkAddsUpToTotalSupply: checkAddsUpToTotalSupply,
     checksTotalSupply: checksTotalSupply,
     checkRemainingFounderCoins: checkRemainingFounderCoins,
     checkRemainingKittyCoins: checkRemainingKittyCoins,
@@ -613,6 +561,5 @@ module.exports = function (KittyCoinClub, accounts) {
     checkDonationAggregator: checkDonationAggregator,
     checkDonation: checkDonation,
     /** KittyCoin */
-    checkKittyCoinAggregator: checkKittyCoinAggregator,
   };
 };

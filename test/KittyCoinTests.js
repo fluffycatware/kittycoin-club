@@ -52,17 +52,14 @@ contract('KittyCoinClub', function (accounts) {
    * ------------------------------------------------
    */
 
-  // checks whether remainingKittyCoins and remainingFounderCoins equal to totalSupply
-  checkAddsUpToTotalSupply();
-
   // checks to confirm the token details match the ones supplies
-  checkTokenVariables('KittyCoinClub', '🐱', 0);
+  checkTokenVariables('KittyCoinClub', 'KCC');
 
-  // should be 25344 remainingCats (non-genesis cats)
-  checkRemainingKittyCoins(25344);
+  // // should be 25344 remainingCats (non-genesis cats)
+  // checkRemainingKittyCoins(25344);
 
-  // should be 256 remainingFounderCoins
-  checkRemainingFounderCoins(256);
+  // // should be 256 remainingFounderCoins
+  // checkRemainingFounderCoins(256);
 
   // account[0] should have a balance of 0 for the balance types
   checkAccountKittyCoinCount(0, 0);
@@ -218,12 +215,6 @@ contract('KittyCoinClub', function (accounts) {
 
   // total number of kitties is not 5
   checkKittyAggregator(5, 'expect to fail');
-
-  // account[5] should have 0 kittycoins
-  checkKittyCoinAggregator(0, 5);
-
-  // account[5] should not have 1 kittycoins
-  checkKittyCoinAggregator(1, 5, 'expect to fail');
 
   // kitty[0] should be enabled, account[3] trust, account[4] foster, donationCap of 0.1 have traitSeed 0x00738ea43a
   checkKitty(0, true, 3, 4, '0x00738ea43a', 0.1);
