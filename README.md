@@ -36,8 +36,8 @@ When you run Ganache you'll be presented with 10 accounts with private keys. The
 Navigate into the root of this project and install truffle (if you haven't already got it). Run the truffle test command to compile and test the contracts.
 
 ```bash
-$ npm install -g truffle
-$ npm run test
+npm install -g truffle
+npm run test
 ```
 
 If you watch the `ganache-cli` output you'll see various transactions taking place while your the contracts unit tests are executed.
@@ -80,15 +80,15 @@ The configuration for running the network locally using truffle is in the `truff
 When you are ready to test, run the `ganache-cli` or `ganache gui` client and then execute the following to compile and deploy the contracts to the network
 
 ```bash
-$ truffle compile
-$ truffle migrate
+truffle compile
+truffle migrate
 ```
 
 then to run the dev application use the following
 
 ```bash
-$ npm install
-$ npm run dev
+npm install
+npm run dev
 ```
 
 ### Send yourself some ETH

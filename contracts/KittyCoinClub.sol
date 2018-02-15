@@ -238,7 +238,12 @@ contract KittyCoinClub is Ownable {
         uint id = kittyCoins.push(KittyCoin(_kittyId, _donationId, _seed)) - 1;
         kittyCoinToOwner[id] = msg.sender;
         kittyCoinCount[msg.sender]++;
-        NewKittyCoin(id, _kittyId, _donationId, _seed);
+        NewKittyCoin(
+            id, 
+            _kittyId, 
+            _donationId, 
+            _seed
+            );
     }
 
     //TODO work out if changing this input parameter to a uint is bad
@@ -285,9 +290,13 @@ contract KittyCoinClub is Ownable {
         address _fosterAddress) internal
         {
 
-        uint256 id = donations.push(
-            Donation(_kittyId, _trustAddress, _fosterAddress, _trustAmount, _fosterAmount)
-            ) - 1;
+        uint256 id = donations.push(Donation(
+            _kittyId, 
+            _trustAddress, 
+            _fosterAddress, 
+            _trustAmount, 
+            _fosterAmount
+            )) - 1;
 
         // Complete the transaction
         pendingWithdrawals[_trustAddress] = _trustAmount;
@@ -299,7 +308,13 @@ contract KittyCoinClub is Ownable {
         // Safe Maths sum total
         uint256 totalAmount = SafeMath.add(_trustAmount, _fosterAmount);
 
-        NewDonation(id, _kittyId, _trustAmount, _fosterAmount, totalAmount);
+        NewDonation(
+            id, 
+            _kittyId, 
+            _trustAmount,
+            _fosterAmount, 
+            totalAmount
+            );
     }
 
     /// @notice Performs a donation, If the foster carer has reached their limit for donations when the amount goes to the trust.
@@ -394,9 +409,13 @@ contract KittyCoinClub is Ownable {
         ) internal
         {   
             
-        uint256 id = kitties.push(
-            Kitty(_enabled, _trustAddr, _fosterAddr, _traitSeed, _donationCap)
-            ) - 1;
+        uint256 id = kitties.push(Kitty(
+            _enabled, 
+            _trustAddr, 
+            _fosterAddr, 
+            _traitSeed, 
+            _donationCap
+            )) - 1;
 
         kittyToTrust[id] = msg.sender;
         kittyCount[msg.sender]++;
@@ -409,7 +428,13 @@ contract KittyCoinClub is Ownable {
     /// @param _donationCap The maximum amount that the carer can receive
     function createKitty(address _fosterAddress, bytes5 _traitSeed, uint256 _donationCap) onlyTrust public {
         require(_donationCap > 0);
-        _createKitty(true, msg.sender, _fosterAddress, _traitSeed, _donationCap);
+        _createKitty(
+            true, 
+            msg.sender, 
+            _fosterAddress, 
+            _traitSeed, 
+            _donationCap
+            );
     }
 
     /// @notice Returns all the relevant information about a specific kitty.
