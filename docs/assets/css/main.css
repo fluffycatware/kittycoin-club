@@ -98,6 +98,11 @@ hr {
     color: white;
 }
 
+.navbar-right {
+    position: absolute;
+    right: 0px;
+}
+
 /* Image borders */
 
 .shadow-1 {
@@ -281,4 +286,14 @@ i {
 .ribbon.round h4::after {
     background: #33aaf8;
     background: linear-gradient(right, #33aaf8 0%, #3498db 100%);
+}
+
+/* Account Personalization */
+#account-icon {
+    width: 40px;
+    height: 40px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    border-radius: 10%;
+    box-shadow: inset rgba(255, 255, 255, 0.6) 0 2px 2px, inset rgba(0, 0, 0, 0.3) 0 -2px 6px;
 }

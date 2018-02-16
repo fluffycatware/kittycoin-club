@@ -5,6 +5,12 @@ function populateUserData () {
   if (typeof web3 !== 'undefined') {
     var account = web3.eth.defaultAccount;
     if (account) {
+      var icon = document.getElementById('account-icon');
+      icon.style.backgroundImage = 'url(' + blockies.create({ 
+        seed:account,
+        size: 15,
+        scale: 3
+      }).toDataURL()+')'
       $('#inputTrustAddress').val(account);
     } else {
       window.location.assign("sign-in.html");
@@ -97,11 +103,27 @@ var App = {
 
       // Set the provider for our contract
       App.contracts.KittyCoinClub.setProvider(web3.currentProvider);
+      // Load Account information
+      App.getAccountDetails();
 
       // User our contract to retrieve the kitties that can be donated to
       return App.loadKitties();
     });
     return App.bindEvents();
+  },
+
+  getAccountDetails() {
+    let kittyCoinClubInstance;
+    var account = web3.eth.defaultAccount;
+
+    App.contracts.KittyCoinClub.deployed().then((instance) => {
+      kittyCoinClubInstance = instance;
+      return kittyCoinClubInstance.pendingWithdrawals(account);
+    }).then((amount) => {
+      $('#accountWalletAmount').text(web3.fromWei(amount).toNumber());
+    }).catch((err) => {
+      console.log(err.message);
+    });
   },
 
   loadKitties() {
