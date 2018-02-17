@@ -4,34 +4,44 @@
     "name": "Tortalina",
     "picture": "assets/img/kitties/0.jpg",
     "location": "Perth, Western Australia",
-    "description": "I just had a litter of kittens and am super confused about why that happened!"
+    "description": "I just had a litter of kittens and am super confused about why that happened!",
+    "donationCurrent": 0.002,
+    "donationTarget": 0.022
   },
   {
     "id": 1,
     "name": "Felix",
     "picture": "assets/img/kitties/1.jpg",
     "location": "Perth, Western Australia",
-    "description": "Play Hard, Nap Hard is my motto. I get along better with my human playmates!."
+    "description": "Play Hard, Nap Hard is my motto. I get along better with my human playmates!.",
+    "donationCurrent": 0.114,
+    "donationTarget": 0.031
   },
   {
     "id": 2,
     "name": "Pixel",
     "picture": "assets/img/kitties/2.jpg",
     "location": "Perth, Western Australia",
-    "description": "I was shy at first but have grown to love playing with people and other kitties."
+    "description": "I was shy at first but have grown to love playing with people and other kitties.",
+    "donationCurrent": 0.013,
+    "donationTarget": 0.018
   },
   {
     "id": 3,
     "name": "Calipso",
     "picture": "assets/img/kitties/3.jpg",
     "location": "Perth, Western Australia",
-    "description": "I just want a human to cuddle up with. Maybe you can be my new human?"
+    "description": "I just want a human to cuddle up with. Maybe you can be my new human?",
+    "donationCurrent": 0.005,
+    "donationTarget": 0.041
   },
   {
     "id": 4,
     "name": "Crystal",
     "picture": "assets/img/kitties/4.jpg",
     "location": "Perth, Western Australia",
-    "description": "I just really love people! All the people, all the time. Are you people?"
+    "description": "I just really love people! All the people, all the time. Are you people?",
+    "donationCurrent": 0.023,
+    "donationTarget": 0.0376
   }
 ]

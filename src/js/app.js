@@ -71,6 +71,20 @@ function loadKittiesFromJson() {
       kittyTemplate.find('.card-img-top').attr('src', data[i].picture);
       kittyTemplate.find('.card-text').text(data[i].description);
       kittyTemplate.find('.btn-donate').attr('data-id', data[i].id);
+      kittyTemplate.find('.kitty-donation-current').text(data[i].donationCurrent);
+      kittyTemplate.find('.kitty-donation-target').text(data[i].donationTarget);
+
+      var donateCurr = new BigNumber(kittyTemplate.find('.kitty-donation-current').text());
+      var donateTar = new BigNumber(kittyTemplate.find('.kitty-donation-target').text());
+      var percentOfTarget = donateCurr.dividedBy(donateTar).times(100);
+      kittyTemplate.find('.kitty-donation-progress').attr(
+        "style","width: " + percentOfTarget + "%; aria-valuenow: " + percentOfTarget + "%"
+      );
+      if (percentOfTarget >= 100) {
+        kittyTemplate.find('.kitty-donation-progress').addClass("bg-success");
+      } else {
+        kittyTemplate.find('.kitty-donation-progress').removeClass("bg-success");
+      }
 
       kittyRow.append(kittyTemplate.html());
     }
