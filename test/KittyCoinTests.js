@@ -48,7 +48,7 @@ contract('KittyCoinClub', function (accounts) {
    * | 7        | 0x00625cc596 | 0.8                |
    * | 8        | 0x00b5348ba3 | 0.9                |
    * | 9        | 0x008ebbd965 | 1.0                |
-   * | 10       | 0x00dcccea0d | 1.1                |
+   * | 10       | 0x00dcecda1c | 2.0                |
    * ------------------------------------------------
    */
 
@@ -162,38 +162,141 @@ contract('KittyCoinClub', function (accounts) {
   checkCanCreateKitty(4, '0x008ebbd965', 1.0, 3);
 
   // account[3] should be able to create kitty[10] with account[3] as trust address 
-  // and account[4] address as a foster with a cap of 1.1 eth
-  checkCanCreateKitty(4, '0x00dcccea0d', 1.1, 3);
+  // and account[4] address as a foster with a cap of 2.0 eth
+  checkCanCreateKitty(4, '0x00dcecda1c', 2.0, 3);
 
   // account[5] should be able to donate 1.0 eth to kitty[0], with 0.1 to trust and 0.9 to foster
   checkCanCreateDonation(0, 0.1, 0.9, 1.0, 5);
 
+  // kitty[0] had 0.1 cap
+  // account[4] donated 0.9, total 0.9 - x = 0.1 cap, 0.8 remaining
+  // account[3] donated 0.1 + 0.8 remainder from account[4]
+  // account[3] trust should get 0.9
+  // account[4] foster should get 0.1
+  // total account[3] pending = 0.9
+  // total account[4] pending = 0.1
+  checkPendingWithdrawals(3, 0.9);
+  checkPendingWithdrawals(4, 0.1);
+
   // account[5] should be able to donate 1.0 eth to kitty[1], with 0.2 to trust and 0.8 to foster
   checkCanCreateDonation(1, 0.2, 0.8, 1.0, 5);
+
+  // kitty[1] had 0.2 cap
+  // account[4] donated 0.8, total 0.8 - x = 0.2 cap, 0.6 remaining
+  // account[3] donated 0.2 + 0.6 remainder from account[4]
+  // account[3] trust should get 0.8
+  // account[4] foster should get 0.2
+  // total account[3] pending = 0.9 + 0.8 = 1.7
+  // total account[4] pending = 0.1 + 0.2 = 0.3
+  checkPendingWithdrawals(3, 1.7);
+  checkPendingWithdrawals(4, 0.3);
 
   // account[5] should be able to donate 1.0 eth to kitty[2], with 0.3 to trust and 0.7 to foster
   checkCanCreateDonation(2, 0.3, 0.7, 1.0, 5);
 
+  // kitty[2] had 0.3 cap
+  // account[4] donated 0.7, total 0.7 - x = 0.3 cap, 0.4 remaining
+  // account[3] donated 0.3 + 0.4 remainder from account[4]
+  // account[3] trust should get 0.7
+  // account[4] foster should get 0.3
+  // total account[3] pending = 1.7 + 0.7 = 2.4
+  // total account[4] pending = 0.3 + 0.3 = 0.6
+  checkPendingWithdrawals(3, 2.4);
+  checkPendingWithdrawals(4, 0.6);
+
   // account[5] should be able to donate 1.0 eth to kitty[3], with 0.4 to trust and 0.6 to foster
   checkCanCreateDonation(3, 0.4, 0.6, 1.0, 5);
+
+  // kitty[3] had 0.4 cap
+  // account[4] donated 0.6, total 0.6 - x = 0.4 cap, 0.2 remaining
+  // account[3] donated 0.4 + 0.2 remainder from account[4]
+  // account[3] trust should get 0.6
+  // account[4] foster should get 0.4
+  // total account[3] pending = 2.4 + 0.6 = 3.0
+  // total account[4] pending = 0.6 + 0.4 = 1.0
+  checkPendingWithdrawals(3, 3.0);
+  checkPendingWithdrawals(4, 1.0);
 
   // account[5] should be able to donate 1.0 eth to kitty[4], with 0.5 to trust and 0.5 to foster
   checkCanCreateDonation(4, 0.5, 0.5, 1.0, 5);
 
+  // kitty[4] had 0.5 cap
+  // account[4] donated 0.5, total 0.5 - x = 0.5 cap, 0.0 remaining, no overflow
+  // account[3] donated 0.5
+  // account[3] trust should get 0.5
+  // account[4] foster should get 0.5
+  // total account[3] pending = 3.0 + 0.5 = 3.5
+  // total account[4] pending = 1.0 + 0.5 = 1.5
+  checkPendingWithdrawals(3, 3.5);
+  checkPendingWithdrawals(4, 1.5);
+
   // account[5] should be able to donate 1.0 eth to kitty[5], with 0.6 to trust and 0.4 to foster
   checkCanCreateDonation(5, 0.6, 0.4, 1.0, 5);
+
+  // kitty[5] had 0.6 cap
+  // account[4] donated 0.4, total 0.4 - x = 0.6 cap, -0.2 remaining, no overflow
+  // account[3] donated 0.6
+  // account[3] trust should get 0.6
+  // account[4] foster should get 0.4
+  // total account[3] pending = 3.5 + 0.6 = 4.1
+  // total account[4] pending = 1.5 + 0.4 = 1.9
+  checkPendingWithdrawals(3, 4.1);
+  checkPendingWithdrawals(4, 1.9);
 
   // account[5] should be able to donate 1.0 eth to kitty[6], with 0.7 to trust and 0.3 to foster
   checkCanCreateDonation(6, 0.7, 0.3, 1.0, 5);
 
+  // kitty[6] had 0.7 cap
+  // account[4] donated 0.3, total 0.3 - x = 0.7 cap, -0.4 remaining, no overflow
+  // account[3] donated 0.7
+  // account[3] trust should get 0.7
+  // account[4] foster should get 0.3
+  // total account[3] pending = 4.1 + 0.7 = 4.8
+  // total account[4] pending = 1.9 + 0.3 = 2.2
+  checkPendingWithdrawals(3, 4.8);
+  checkPendingWithdrawals(4, 2.2);
+
   // account[5] should be able to donate 1.0 eth to kitty[7], with 0.8 to trust and 0.2 to foster
   checkCanCreateDonation(7, 0.8, 0.2, 1.0, 5);
+
+  // kitty[7] had 0.8 cap
+  // account[4] donated 0.2, total 0.2 - x = 0.8 cap, -0.6 remaining, no overflow
+  // account[3] donated 0.8
+  // account[3] trust should get 0.8
+  // account[4] foster should get 0.2
+  // total account[3] pending = 4.8 + 0.8 = 5.6
+  // total account[4] pending = 2.2 + 0.2 = 2.4
+  checkPendingWithdrawals(3, 5.6);
+  checkPendingWithdrawals(4, 2.4);
 
   // account[5] should be able to donate 1.0 eth to kitty[8], with 0.9 to trust and 0.1 to foster
   checkCanCreateDonation(8, 0.9, 0.1, 1.0, 5);
 
+  // kitty[8] had 0.9 cap
+  // account[4] donated 0.1, total 0.1 - x = 0.9 cap, -0.8 remaining, no overflow
+  // account[3] donated 0.9
+  // account[3] trust should get 0.9
+  // account[4] foster should get 0.1
+  // total account[3] pending = 5.6 + 0.9 = 6.5
+  // total account[4] pending = 2.4 + 0.1 = 2.5
+  checkPendingWithdrawals(3, 6.5);
+  checkPendingWithdrawals(4, 2.5);
+
   // account[5] should be able to donate 1.0 eth to kitty[9], with 1.0 to trust and 0.0 to foster
   checkCanCreateDonation(9, 1.0, 0, 1.0, 5);
+
+  // kitty[9] had 1.0 cap
+  // account[4] donated 0.0, total 0.0 - x = 1.0 cap, -0.1 remaining, no overflow
+  // account[3] donated 1.0
+  // account[3] trust should get 1.0
+  // account[4] foster should get 0.0
+  // total account[3] pending = 6.5 + 1.0 = 7.5
+  // total account[4] pending = 2.5 + 0.0 = 2.5
+  checkPendingWithdrawals(3, 7.5);
+  checkPendingWithdrawals(4, 2.5);
+
+  // Check withdrawal of 7.5 eth is successful
+  checkWithdraw(3, 7.5);
 
   // account[5] should have 10 donations
   checkNumberOfDonationsForDonator(5, 10);
@@ -229,4 +332,10 @@ contract('KittyCoinClub', function (accounts) {
   // donation[0] should not have kitty[1], account[1] trust, account[2] foster, 
   // 0.1 eth trust, 0.9 eth foster
   checkDonation(0, 1, 1, 2, 0.1, 0.9, 'expect to fail');
+
+  // account[5] should be able to donate 0.5 eth to kitty[10], with 0.25 to trust and 0.25 to foster
+  checkCanCreateDonation(10, 0.25, 0.25, 0.5, 5);
+
+  // account[5] should be able to donate 4 eth to kitty[10], with 2.0 to trust and 2.0 to foster
+  checkCanCreateDonation(10, 2.0, 2.0, 4, 5);
 });

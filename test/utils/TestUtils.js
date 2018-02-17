@@ -118,21 +118,23 @@ module.exports = function (KittyCoinClub, accounts) {
   };
 
   // checks to see whether an account has the expected value for pendingWithdrawals
-  function checkPendingWithdrawals (account, expectedValueInEth) {
-    var expectedValue = web3.toWei(expectedValueInEth, 'ether');
+  function checkPendingWithdrawals (account, expectedValue) {
     it('account[' + account + '] should have pendingWithdrawals equal to ' + expectedValue, function (done) {
       KittyCoinClub.deployed().then(function (instance) {
         instance.pendingWithdrawals(accounts[account]).then(function (pendingWithdrawals) {
-          assert.equal(pendingWithdrawals.valueOf(), expectedValue
-            , 'account[' + account + ']\'s pendingWithdrawals is not ' + expectedValue);
+          assert.equal(
+            web3.fromWei(pendingWithdrawals.valueOf(), 'ether'),
+            expectedValue
+            , 'account[' + account + ']\'s pendingWithdrawal: ' + 
+            web3.fromWei(pendingWithdrawals.valueOf(), 'ether') + ' is not ' + expectedValue);
         }).then(done).catch(done);
       });
     });
   };
 
   // checks to see whether the withdrawing account is credited with ether equal to pendingWithdrawals
-  function checkWithdraw (account, expectedDifferenceInEth) {
-    // var expectedDifference = web3.toWei(expectedDifferenceInEth, 'ether');
+  function checkWithdraw (account, expectedWithdrawEth) {
+    var expectedWithdraw = web3.toWei(expectedWithdrawEth, 'ether');
     it('should withdraw funds from account[' + account + ']', function (done) {
       KittyCoinClub.deployed().then(function (instance) {
         instance.pendingWithdrawals(accounts[account]).then(function (pendingWithdrawals) {
@@ -143,12 +145,19 @@ module.exports = function (KittyCoinClub, accounts) {
             var gasUsed = tx.receipt.gasUsed;
             var gasCost = gasPrice.times(gasUsed);
             var finalBalance = web3.eth.getBalance(accounts[account]);
-            // console.log('initial:', initialBalance.toString()
-            //   , 'final:', finalBalance.toString()
-            //   , 'withdrawal:', pendingWithdrawals.toString()
-            //   , finalBalance.minus(initialBalance).plus(gasCost).valueOf());
+            console.log(
+              '\tinitialBalance: ', web3.fromWei(initialBalance, 'ether') + 
+              '\n\tfinalBalance: ', web3.fromWei(finalBalance, 'ether') + 
+              '\n\tpendingWithdrawal: ', web3.fromWei(pendingWithdrawals, 'ether') +
+              '\n\twithdrawal: final(' + web3.fromWei(finalBalance, 'ether') + 
+              ') - init(' + web3.fromWei(initialBalance, 'ether') + 
+              ') + gas(' + web3.fromWei(gasCost, 'ether') + ') = ' + 
+              web3.fromWei(finalBalance.minus(initialBalance).plus(gasCost), 'ether')
+            );
             assert.equal(finalBalance.minus(initialBalance).plus(gasCost).valueOf(), pendingWithdrawals.valueOf()
               , 'pendingWithdrawals was not deposited in account[' + account + ']');
+            assert.equal(finalBalance.minus(initialBalance).plus(gasCost).valueOf(), expectedWithdraw
+              , 'expectedWithdraw was not equal to actual withdraw in account[' + account + ']');
           }).then(done).catch(done);
         });
       });
