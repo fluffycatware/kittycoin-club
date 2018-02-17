@@ -124,6 +124,7 @@ contract KittyCoinClub is Ownable, ERC721 {
         address fosterAddress;
         bytes5 kittyTraitSeed;
         uint256 donationCap;
+        uint256 donationAmount;
     }
 
     struct Trust {
@@ -190,7 +191,7 @@ contract KittyCoinClub is Ownable, ERC721 {
     */
     event NewKittyCoin(address _owner, uint256 kittyCoinId, uint256 kittyId, uint256 donationId, uint coinSeed);
     event NewDonation(uint256 donationId, uint256 kittyId, uint256 trustAmount, uint256 fosterAmount, uint256 totalDonationAmount);
-    event NewKitty(uint256 kittyId, bytes5 traitSeed);
+    event NewKitty(uint256 kittyId, address trustAddress, address fosterAddress, bytes5 traitSeed, uint256 donationCap);
     event NewTrust(uint256 trustId);
     event ChangedTrustAddress(uint256 trustId, address trustAddr);
 
@@ -658,6 +659,9 @@ contract KittyCoinClub is Ownable, ERC721 {
         // Safe Maths sum total
         uint256 totalAmount = SafeMath.add(_trustAmount, _fosterAmount);
 
+        // Add amount to a kitties donation limit
+        kitties[_kittyId].donationAmount = kitties[_kittyId].donationAmount + totalAmount;
+
         NewDonation(
             id, 
             _kittyId, 
@@ -680,8 +684,9 @@ contract KittyCoinClub is Ownable, ERC721 {
         uint256 donationTotal = msg.value;
         uint256 fosterOverflow;
         uint256 fosterAmount = _fosterAmount;
-        if (_fosterAmount >= kitties[_kittyId].donationCap) {
-            fosterOverflow = SafeMath.sub(_fosterAmount, kitties[_kittyId].donationCap);
+        uint256 donationLimit = SafeMath.sub(kitties[_kittyId].donationCap, kitties[_kittyId].donationAmount);
+        if (donationLimit >= 0 && _fosterAmount >= donationLimit) {
+            fosterOverflow = SafeMath.sub(_fosterAmount, donationLimit);
             fosterAmount = SafeMath.sub(_fosterAmount, fosterOverflow);
         }
         uint256 trustAmount = SafeMath.sub(donationTotal, fosterAmount);
@@ -764,12 +769,19 @@ contract KittyCoinClub is Ownable, ERC721 {
             _trustAddr, 
             _fosterAddr, 
             _traitSeed, 
-            _donationCap
+            _donationCap,
+            0 // Default donation start at 0
             )) - 1;
 
         kittyToTrust[id] = msg.sender;
         kittyCount[msg.sender]++;
-        NewKitty(id, _traitSeed);
+        NewKitty(
+            id, 
+            _trustAddr, 
+            _fosterAddr, 
+            _traitSeed, 
+            _donationCap
+            );
     }
 
     /// @notice Creates a new kitty which goes up for donation
@@ -797,7 +809,8 @@ contract KittyCoinClub is Ownable, ERC721 {
         address trustAddress,
         address fosterAddress,
         bytes5 traitSeed,
-        uint256 donationCap
+        uint256 donationCap,
+        uint256 donationAmount
     ) {
         Kitty storage kitty = kitties[_kittyId];
         isEnabled = kitty.donationsEnabled;
@@ -805,6 +818,7 @@ contract KittyCoinClub is Ownable, ERC721 {
         fosterAddress = kitty.fosterAddress;
         traitSeed = bytes5(kitty.kittyTraitSeed);
         donationCap = uint256(kitty.donationCap);
+        donationAmount = uint256(kitty.donationAmount);
     }
     
     /*

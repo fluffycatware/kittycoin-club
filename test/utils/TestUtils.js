@@ -283,13 +283,19 @@ module.exports = function (KittyCoinClub, accounts) {
             })
             .then(function (result) {
               assert.include(result.logs[0].event, 'NewKitty', 'NewKitty event was not triggered');
-              // const logs = result.logs[0].args;
-              // const kittyId = logs.kittyId.toNumber();
-              // const traitSeed = logs.traitSeed;
-              // console.log(
-              //   '\tkittyId: ' + kittyId +
-              //   '\ttraitsId: ' + web3.toHex(traitSeed)
-              // );
+              const logs = result.logs[0].args;
+              const kittyId = logs.kittyId.toNumber();
+              const trustAddress = logs.trustAddress;
+              const fosterAddress = logs.fosterAddress;
+              const traitSeed = logs.traitSeed;
+              const donateCap = logs.donationCap;
+              console.log(
+                '\tkittyId: ' + kittyId +
+                '\n\t  trustAddress: ' + trustAddress +
+                '\n\t  fosterAddress: ' + fosterAddress +
+                '\n\t  traitsId: ' + web3.toHex(traitSeed) +
+                '\n\t  donationCap: ' + web3.fromWei(donateCap, 'ether')
+              );
             });
         }).then(done).catch(done);
       });

@@ -108,7 +108,7 @@ var App = {
   contracts: {},
 
   init() {
-    loadKittiesFromJson();
+    //loadKittiesFromJson();
     return App.initWeb3();
   },
 
@@ -137,6 +137,18 @@ var App = {
       return App.loadKitties();
     });
     return App.bindEvents();
+  },
+
+  withdraw() {
+    let kittyCoinClubInstance;
+
+    App.contracts.KittyCoinClub.deployed().then((instance) => {
+      kittyCoinClubInstance = instance;
+
+      return kittyCoinClubInstance.withdraw();
+    }).catch((err) => {
+      console.log(err.message);
+    });
   },
 
   getAccountDetails() {
@@ -199,9 +211,17 @@ var App = {
         'trustAddress'  : kitty[1],
         'fosterAddress' : kitty[2],
         'traitSeed'     : kitty[3],
-        'donationCap'   : web3.fromWei(kitty[4]).toNumber()
+        'donationCap'   : web3.fromWei(kitty[4]).toNumber(),
+        'donationAmount': web3.fromWei(kitty[5]).toNumber()
       };
-      console.log(kittyJson);
+      loadKitty(
+        'Kitty: ' + kittyId, 
+        generateKittyCoinImage(kittyJson.traitSeed, 10), 
+        'KittyTraits: ' + kittyJson.traitSeed, 
+        kittyId, 
+        kittyJson.donationAmount, 
+        kittyJson.donationCap
+      );
     }).catch((err) => {
       console.log(err.message);
     });
