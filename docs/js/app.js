@@ -243,7 +243,6 @@ var App = {
         'trustAmount'   : web3.fromWei(donation[3]).toNumber(),
         'fosterAmount'  : web3.fromWei(donation[4]).toNumber()
       };
-      console.log(donationJson);
     }).catch((err) => {
       console.log(err.message);
     });

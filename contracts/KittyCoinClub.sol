@@ -650,8 +650,8 @@ contract KittyCoinClub is Ownable, ERC721 {
             )) - 1;
 
         // Complete the transaction
-        pendingWithdrawals[_trustAddress] = _trustAmount;
-        pendingWithdrawals[_fosterAddress] = _fosterAmount;
+        pendingWithdrawals[_trustAddress] = SafeMath.add(pendingWithdrawals[_trustAddress], _trustAmount);
+        pendingWithdrawals[_fosterAddress] = SafeMath.add(pendingWithdrawals[_fosterAddress], _fosterAmount);
 
         donationToDonator[id] = msg.sender;
         donationCount[msg.sender]++;
@@ -660,7 +660,7 @@ contract KittyCoinClub is Ownable, ERC721 {
         uint256 totalAmount = SafeMath.add(_trustAmount, _fosterAmount);
 
         // Add amount to a kitties donation limit
-        kitties[_kittyId].donationAmount = kitties[_kittyId].donationAmount + totalAmount;
+        kitties[_kittyId].donationAmount = SafeMath.add(kitties[_kittyId].donationAmount, totalAmount);
 
         NewDonation(
             id, 
@@ -682,11 +682,13 @@ contract KittyCoinClub is Ownable, ERC721 {
 
         // Safe Maths donation
         uint256 donationTotal = msg.value;
-        uint256 fosterOverflow;
         uint256 fosterAmount = _fosterAmount;
         uint256 donationLimit = SafeMath.sub(kitties[_kittyId].donationCap, kitties[_kittyId].donationAmount);
-        if (donationLimit >= 0 && _fosterAmount >= donationLimit) {
-            fosterOverflow = SafeMath.sub(_fosterAmount, donationLimit);
+        if (donationLimit <= 0) {
+            fosterAmount = 0;
+        }
+        if (fosterAmount >= donationLimit) {
+            uint256 fosterOverflow = SafeMath.sub(_fosterAmount, donationLimit);
             fosterAmount = SafeMath.sub(_fosterAmount, fosterOverflow);
         }
         uint256 trustAmount = SafeMath.sub(donationTotal, fosterAmount);
