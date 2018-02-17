@@ -12,8 +12,6 @@ function populateUserData () {
         scale: 3
       }).toDataURL()+')'
       $('#inputTrustAddress').val(account);
-    } else {
-      window.location.assign("sign-in.html");
     }
   }
 }
@@ -67,28 +65,43 @@ function loadKittiesFromJson() {
     const kittyTemplate = $('#kitty-template');
 
     for (var i = 0; i < data.length; i++) {
-      kittyTemplate.find('.card-title').text(data[i].name);
-      kittyTemplate.find('.card-img-top').attr('src', data[i].picture);
-      kittyTemplate.find('.card-text').text(data[i].description);
-      kittyTemplate.find('.btn-donate').attr('data-id', data[i].id);
-      kittyTemplate.find('.kitty-donation-current').text(data[i].donationCurrent);
-      kittyTemplate.find('.kitty-donation-target').text(data[i].donationTarget);
-
-      var donateCurr = new BigNumber(kittyTemplate.find('.kitty-donation-current').text());
-      var donateTar = new BigNumber(kittyTemplate.find('.kitty-donation-target').text());
-      var percentOfTarget = donateCurr.dividedBy(donateTar).times(100);
-      kittyTemplate.find('.kitty-donation-progress').attr(
-        "style","width: " + percentOfTarget + "%; aria-valuenow: " + percentOfTarget + "%"
+      loadKitty(
+        data[i].name, 
+        data[i].picture, 
+        data[i].description, 
+        data[i].id, 
+        data[i].donationCurrent, 
+        data[i].donationTarget
       );
-      if (percentOfTarget >= 100) {
-        kittyTemplate.find('.kitty-donation-progress').addClass("bg-success");
-      } else {
-        kittyTemplate.find('.kitty-donation-progress').removeClass("bg-success");
-      }
-
-      kittyRow.append(kittyTemplate.html());
     }
   });
+}
+
+/** Add kitty via values */
+function loadKitty(kittyName, kittyImage, kittyDescription, kittyId, donationCurrent, donationTarget) {
+  const kittyRow = $('#kitty-row');
+  const kittyTemplate = $('#kitty-template');
+
+  kittyTemplate.find('.card-title').text(kittyName);
+  kittyTemplate.find('.card-img-top').attr('src', kittyImage);
+  kittyTemplate.find('.card-text').text(kittyDescription);
+  kittyTemplate.find('.btn-donate').attr('data-id', kittyId);
+  kittyTemplate.find('.kitty-donation-current').text(donationCurrent);
+  kittyTemplate.find('.kitty-donation-target').text(donationTarget);
+
+  var donateCurr = new BigNumber(donationCurrent);
+  var donateTar = new BigNumber(donationTarget);
+  var percentOfTarget = donateCurr.dividedBy(donateTar).times(100);
+  kittyTemplate.find('.kitty-donation-progress').attr(
+    "style","width: " + percentOfTarget + "%; aria-valuenow: " + percentOfTarget + "%"
+  );
+  if (percentOfTarget >= 100) {
+    kittyTemplate.find('.kitty-donation-progress').addClass("bg-success");
+  } else {
+    kittyTemplate.find('.kitty-donation-progress').removeClass("bg-success");
+  }
+
+  kittyRow.append(kittyTemplate.html());
 }
 
 var App = {
