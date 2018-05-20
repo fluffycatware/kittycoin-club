@@ -84,7 +84,7 @@ function loadKitty(kittyName, kittyImage, kittyDescription, kittyId, donationCur
 
   kittyTemplate.find('.card-title').text(kittyName);
   kittyTemplate.find('.card-img-top').attr('src', kittyImage);
-  kittyTemplate.find('.card-text').text(kittyDescription);
+  kittyTemplate.find('.kitty-trait').text(kittyDescription);
   kittyTemplate.find('.btn-donate').attr('data-id', kittyId);
   kittyTemplate.find('.kitty-donation-current').text(donationCurrent);
   kittyTemplate.find('.kitty-donation-target').text(donationTarget);
@@ -215,9 +215,9 @@ var App = {
         'donationAmount': web3.fromWei(kitty[5]).toNumber()
       };
       loadKitty(
-        'Kitty: ' + kittyId, 
+        kittyId, 
         generateKittyCoinImage(kittyJson.traitSeed, 10), 
-        'KittyTraits: ' + kittyJson.traitSeed, 
+        kittyJson.traitSeed, 
         kittyId, 
         kittyJson.donationAmount, 
         kittyJson.donationCap

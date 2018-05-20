@@ -1,4 +1,4 @@
-pragma solidity ^0.4.18;
+pragma solidity 0.4.23;
 
 import "zeppelin-solidity/contracts/ownership/Ownable.sol";
 import "zeppelin-solidity/contracts/math/SafeMath.sol";
@@ -34,7 +34,7 @@ contract ERC721 {
 /// it has one function that will return the data as bytes.
 contract ERC721Metadata {
     /// @dev Given a token Id, returns a byte array that is supposed to be converted into string.
-    function getMetadata(uint256 _tokenId, string) public view returns (bytes32[4] buffer, uint256 count) {
+    function getMetadata(uint256 _tokenId, string) public pure returns (bytes32[4] buffer, uint256 count) {
         if (_tokenId == 1) {
             buffer[0] = "Hello World! :D";
             count = 15;
@@ -227,7 +227,7 @@ contract KittyCoinClub is Ownable, ERC721 {
      \_____\___/|_| |_|___/\__|_|   \__,_|\___|\__\___/|_|   
     */
     /// @notice Contructor for the KittCoinClub contract
-    function KittyCoinClub() payable public {
+    constructor() payable public {
         owner = msg.sender;
         //assert((remainingKittyCoins + remainingFounderCoins) == totalSupply);
     }
@@ -251,7 +251,7 @@ contract KittyCoinClub is Ownable, ERC721 {
             kittyCoinCount[_from]--;
         }
         // Emit the transfer event.
-        Transfer(_from, _to, _tokenId);
+        emit Transfer(_from, _to, _tokenId);
     }
 
     /// @notice Introspection interface as per ERC-165 (https://github.com/ethereum/EIPs/issues/165).
@@ -347,7 +347,7 @@ contract KittyCoinClub is Ownable, ERC721 {
         _approve(_tokenId, _to);
 
         // Emit approval event.
-        Approval(msg.sender, _to, _tokenId);
+        emit Approval(msg.sender, _to, _tokenId);
     }
 
     /// @notice Transfer a KittyCoin owned by another address, for which the calling address
@@ -436,7 +436,7 @@ contract KittyCoinClub is Ownable, ERC721 {
         uint _len
     ) 
         private 
-        view 
+        pure 
     {
         // Copy word-length chunks while possible
         for (; _len >= 32; _len -= 32) {
@@ -459,7 +459,7 @@ contract KittyCoinClub is Ownable, ERC721 {
     /// @dev Adapted from toString(slice) by @arachnid (Nick Johnson <arachnid@notdot.net>)
     ///  This method is licenced under the Apache License.
     ///  Ref: https://github.com/Arachnid/solidity-stringutils/blob/2f6ca9accb48ae14c66f1437ec50ed19a0616f78/strings.sol
-    function _toString(bytes32[4] _rawBytes, uint256 _stringLength) private view returns (string) {
+    function _toString(bytes32[4] _rawBytes, uint256 _stringLength) private pure returns (string) {
         var outputString = new string(_stringLength);
         uint256 outputPtr;
         uint256 bytesPtr;
@@ -579,7 +579,7 @@ contract KittyCoinClub is Ownable, ERC721 {
         _transfer(0, _owner, newKittyCoinId);
 
         // Send KittyCoin event
-        NewKittyCoin(
+        emit NewKittyCoin(
             _owner,
             newKittyCoinId, 
             uint256(_kittyCoin.kittyId), 
@@ -662,7 +662,7 @@ contract KittyCoinClub is Ownable, ERC721 {
         // Add amount to a kitties donation limit
         kitties[_kittyId].donationAmount = SafeMath.add(kitties[_kittyId].donationAmount, totalAmount);
 
-        NewDonation(
+        emit NewDonation(
             id, 
             _kittyId, 
             _trustAmount,
@@ -777,7 +777,7 @@ contract KittyCoinClub is Ownable, ERC721 {
 
         kittyToTrust[id] = msg.sender;
         kittyCount[msg.sender]++;
-        NewKitty(
+        emit NewKitty(
             id, 
             _trustAddr, 
             _fosterAddr, 
@@ -838,7 +838,7 @@ contract KittyCoinClub is Ownable, ERC721 {
         uint256 id = trusts.push(Trust(_enabled, _trustAddr)) - 1;
         trustIdToAddress[id] = _trustAddr;
         trusted[_trustAddr] = _enabled;
-        NewTrust(id);
+        emit NewTrust(id);
     }
 
     /// @notice Allows the contract owner to add a new trust
@@ -864,7 +864,7 @@ contract KittyCoinClub is Ownable, ERC721 {
         //TODO replace this logic with something better
         trusted[_newTrustAddr] = true;
         trusted[msg.sender] = false;
-        ChangedTrustAddress(_id, _newTrustAddr);
+        emit ChangedTrustAddress(_id, _newTrustAddr);
     }
 
     /// @notice Checks if a given address belongs to a trust
