@@ -1,21 +1,5 @@
 var BigNumber = require('bignumber.js');
 
-/** Updates the trust address field with the users address. */
-function populateUserData () {
-  if (typeof web3 !== 'undefined') {
-    var account = web3.eth.defaultAccount;
-    if (account) {
-      var icon = document.getElementById('account-icon');
-      icon.style.backgroundImage = 'url(' + blockies.create({ 
-        seed:account,
-        size: 15,
-        scale: 3
-      }).toDataURL()+')'
-      $('#inputTrustAddress').val(account);
-    }
-  }
-}
-
 /** Generates a random kitty for the display canvas */
 function randomKitty() {
   generateKittyCoinImage(generateRandomCoinImageHex(), 10);
@@ -130,8 +114,10 @@ var App = {
 
       // Set the provider for our contract
       App.contracts.KittyCoinClub.setProvider(web3.currentProvider);
+
       // Load Account information
-      App.getAccountDetails();
+      App.getAccountDetails(web3.eth.defaultAccount);
+      App.populateUserData(web3.eth.defaultAccount);
 
       // User our contract to retrieve the kitties that can be donated to
       return App.loadKitties();
@@ -151,18 +137,30 @@ var App = {
     });
   },
 
-  getAccountDetails() {
+  getAccountDetails(account) {
     let kittyCoinClubInstance;
-    var account = web3.eth.defaultAccount;
 
     App.contracts.KittyCoinClub.deployed().then((instance) => {
       kittyCoinClubInstance = instance;
+
       return kittyCoinClubInstance.pendingWithdrawals(account);
     }).then((amount) => {
       $('#accountWalletAmount').text(web3.fromWei(amount).toNumber());
     }).catch((err) => {
       console.log(err.message);
     });
+  },
+
+  populateUserData(account) {
+    if (account) {
+      var icon = document.getElementById('account-icon');
+      icon.style.backgroundImage = 'url(' + blockies.create({ 
+        seed:account,
+        size: 15,
+        scale: 3
+      }).toDataURL()+')'
+      $('#inputTrustAddress').val(account);
+    }
   },
 
   loadKitties() {
@@ -358,7 +356,6 @@ var App = {
 jQuery(document).ready(
   function ($) {
     App.init();
-    populateUserData();
     randomKitty();
   }
 );

@@ -16,6 +16,8 @@
         crossorigin="anonymous">
 
     <!-- Custom styles for this template -->
+    <link href="assets/css/ribbon.css" rel="stylesheet">
+    <link href="assets/css/card.css" rel="stylesheet">
     <link href="assets/css/main.css" rel="stylesheet">
 
     <!-- Fonts from Google Fonts -->
@@ -78,11 +80,11 @@
     </div>
     <!-- /headerwrap -->
 
-    <div class="container" id="kitty-donate">
+    <div class="card-container" id="kitty-donate">
         <div class="row mt centered">
             <div class="col-sm-12">
                 <h1>Fluffy Friends</h1>
-                <h3>We're all currently looking for happy homes!</h3>
+                <h4>We're all currently looking for happy homes!</h4>
             </div>
         </div>
         <!-- /row -->
@@ -93,19 +95,23 @@
     </div>
 
     <div id="kitty-template" style="display: none;">
-        <div class="col-lg-4 col-md-6 col-sm-12">
+        <div class="col-lg-3 col-md-4 col-sm-6">
             <div class="ribbon card-kitty">
                 <div class="card shadow-1">
 
                     <!-- Kitty Name -->
-                    <h4 class="card-title">Name</h4>
+                    <h4 class="card-title" style="display:inline-block" ;>Name</h4>
 
                     <!-- Kitty Image -->
                     <img class="card-img-top" src="assets/img/kitties/1.jpg" style="width:100%">
 
                     <div class="card-block">
-                        <!-- Kitty Description -->
-                        <p class="card-text">Description</p>
+                        <!-- Kitty Trait -->
+						<div class="card-text">
+                            <small>Kitty Trait: </small>
+                            <a class="kitty-trait"></a>
+                        </div>
+                        <hr>
 
                         <!-- Kitty Donation Form -->
                         <form class="donate-kitty">
@@ -165,7 +171,7 @@
         <div class="row mt centered">
             <div class="col-lg-12">
                 <h1>Create a Trust</h1>
-                <h3>Assign a new address trust status</h3>
+                <h4>Assign a new address trust status</h4>
             </div>
         </div>
         <!-- /row -->
@@ -212,7 +218,7 @@
         <div class="row mt centered">
             <div class="col-lg-12">
                 <h1>Are you a Trust?</h1>
-                <h3>Add a new Kitty to the system!</h3>
+                <h4>Add a new Kitty to the system!</h4>
             </div>
         </div>
         <!-- /row -->
@@ -289,7 +295,7 @@
         <div class="row mt centered">
             <div class="col-lg-12">
                 <h1>What to know more?</h1>
-                <h3>Here's some way you can!</h3>
+                <h4>Here's some way you can!</h4>
             </div>
         </div>
         <!-- /row -->
