@@ -52,10 +52,10 @@
     "dotenv": "^5.0.1",
     "ethjs-abi": "^0.2.1",
     "jsonfile": "^4.0.0",
-    "snyk": "^1.80.1",
-    "solidity-coverage": "^0.4.14",
+    "snyk": "^1.117.1",
+    "solidity-coverage": "^0.5.7",
     "solium": "^1.1.7",
-    "truffle": "^4.1.8",
+    "truffle": "^4.1.9",
     "truffle-hdwallet-provider": "0.0.3",
     "web3": "^0.20.6",
     "zeppelin-solidity": "^1.9.0"
